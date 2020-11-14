@@ -15,18 +15,22 @@
  */
 
 using UnityEngine;
+using UnityEngine.AI;
 
-namespace StudioJamNov2020.AI
+namespace StudioJamNov2020.Entities
 {
     public class UnitController : MonoBehaviour
     {
-        [Header("Look and Move")]
-        public float m_LookSphereCastRadius = 1f;
-        public float m_LookRange = 40f;
+        [Header("Movement")]
         public float m_MoveSpeed = 1f;
+        public float m_TurnSpeed = 150f;
 
-        // to be moved
-        /*[Header("Attack")]
+        [HideInInspector] public NavMeshAgent m_NavMeshAgent;
+
+        private void Awake() => m_NavMeshAgent = GetComponent<NavMeshAgent>();
+
+		// to be moved
+		/*[Header("Attack")]
         public float attackRange = 1f;
         public float attackRate = 1f;
         public float attackForce = 15f;
@@ -35,12 +39,8 @@ namespace StudioJamNov2020.AI
         public Transform bulletSpawn;
         bool canShoot = true;*/
 
-        [Header("Search")]
-        public float m_SearchingTurnSpeed = 120f;
-        public float m_SearchDuration = 4f;
-
-        // to be moved
-        /*IEnumerator Fire()
+		// to be moved
+		/*IEnumerator Fire()
         {
             canShoot = false;
             var bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
@@ -48,5 +48,5 @@ namespace StudioJamNov2020.AI
             yield return new WaitForSeconds(attackRate);
             canShoot = true;
         }*/
-    }
+	}
 }

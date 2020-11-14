@@ -14,6 +14,7 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+using StudioJamNov2020.Battle;
 using UnityEngine;
 
 namespace StudioJamNov2020.AI.Actions
@@ -23,13 +24,18 @@ namespace StudioJamNov2020.AI.Actions
 	{
 		public override void Act(StateController controller)
 		{
-			Debug.DrawRay(controller.m_Eyes.position, controller.m_Eyes.forward.normalized * controller.enemy.attackRange, Color.red);
+			var combatant = controller.GetComponent<Combatant>();
+			var attackRange = combatant.m_Weapon == null ? 1f : combatant.m_Weapon.m_Range;
+			var attackRate = combatant.m_Weapon == null ? 1f : combatant.m_Weapon.m_Rate;
 
-			if (Physics.SphereCast(controller.m_Eyes.position, controller.m_Unit.lookSphereCastRadius, controller.m_Eyes.forward, out RaycastHit hit, controller.enemy.attackRange)
+			Debug.DrawRay(controller.m_Eyes.position, controller.m_Eyes.forward.normalized * attackRange, Color.red);
+
+			if (Physics.SphereCast(controller.m_Eyes.position, controller.m_LookSphereCastRadius, controller.m_Eyes.forward, out RaycastHit hit, attackRange)
 				&& hit.collider.CompareTag("Player"))
 			{
-				if (controller.CheckIfCountDownElapsed(controller.enemy.attackRate))
-					controller.enemy.RpcFire();
+				if (controller.CheckIfCountDownElapsed(attackRate))
+					; // set an attack animation trigger here
+					//controller.enemy.RpcFire();
 			}
 		}
 	}

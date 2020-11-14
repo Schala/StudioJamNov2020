@@ -16,23 +16,22 @@
 
 using UnityEngine;
 
-namespace StudioJamNov2020.AI.Decisions
+namespace StudioJamNov2020.Battle
 {
-	[CreateAssetMenu(menuName = "AI/Decisions/Look")]
-	public class LookDecision : Decision
-	{
-		public override bool Decide(StateController controller)
-		{
-			Debug.DrawRay(controller.m_Eyes.position, controller.m_Eyes.forward.normalized, Color.green);
+    [CreateAssetMenu(menuName = "Game Item/Weapon")]
+    public class Weapon : ScriptableObject
+    {
+        [Header("Appearance")]
+        [SerializeField] string m_Name = string.Empty;
+        [SerializeField] Sprite m_Icon = null;
 
-			if (Physics.SphereCast(controller.m_Eyes.position, controller.m_LookSphereCastRadius, controller.m_Eyes.forward, out RaycastHit hit,
-				controller.m_LookRange) && hit.collider.CompareTag("Player"))
-			{
-				controller.m_Target = hit.transform;
-				return true;
-			}
+        [Header("Stats")]
+        public float m_Range = 1f;
+        public float m_Rate = 1f;
+        public float m_Force = 15f;
+        public int m_Damage = 50;
 
-			return false;
-		}
-	}
+        [Header("Children")]
+        [SerializeField] GameObject m_Projectile = null;
+    }
 }

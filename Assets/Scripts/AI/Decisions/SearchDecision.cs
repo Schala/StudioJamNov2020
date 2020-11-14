@@ -23,9 +23,9 @@ namespace StudioJamNov2020.AI.Decisions
 	{
 		public override bool Decide(StateController controller)
 		{
-			controller.m_NavMeshAgent.isStopped = true;
-			controller.transform.Rotate(0f, controller.m_Unit.m_SearchingTurnSpeed * Time.deltaTime, 0f);
-			return controller.CheckIfCountDownElapsed(controller.m_Unit.m_SearchDuration);
+			controller.m_Unit.m_NavMeshAgent.isStopped = true;
+			controller.transform.Rotate(0f, controller.m_SearchingTurnSpeed * Time.deltaTime, 0f);
+			return controller.CheckIfCountDownElapsed(controller.m_SearchDuration);
 		}
 	}
 }

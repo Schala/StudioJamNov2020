@@ -14,30 +14,36 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+using StudioJamNov2020.Entities;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace StudioJamNov2020.AI
 {
     public class StateController : MonoBehaviour
     {
-        public State m_CurrentState;
         public Transform m_Eyes;
-        public State m_RemainState;
-        [HideInInspector] public NavMeshAgent m_NavMeshAgent;
-        [HideInInspector] public UnitController m_Unit;
         public List<Transform> m_Waypoints;
+        public bool m_AIActive;
+
+        [Header("States")]
+        public State m_CurrentState;
+        public State m_RemainState;
+
+        [Header("Looking")]
+        public float m_LookSphereCastRadius = 1f;
+        public float m_LookRange = 40f;
+
+        [Header("Searching")]
+        public float m_SearchingTurnSpeed = 120f;
+        public float m_SearchDuration = 4f;
+
+        [HideInInspector] public UnitController m_Unit;
         [HideInInspector] public int m_NextWaypoint;
         [HideInInspector] public Transform m_Target;
         [HideInInspector] public float m_StateTimeElapsed;
-        public bool m_AIActive;
 
-        private void Awake()
-        {
-            m_Unit = GetComponent<UnitController>();
-            m_NavMeshAgent = GetComponent<NavMeshAgent>();
-        }
+        private void Awake() => m_Unit = GetComponent<UnitController>();
 
         void Update()
         {
@@ -45,13 +51,13 @@ namespace StudioJamNov2020.AI
             m_CurrentState.UpdateState(this);
         }
 
-        private void Start() => m_NavMeshAgent.enabled = m_AIActive;
+        private void Start() => m_Unit.m_NavMeshAgent.enabled = m_AIActive;
 
         private void OnDrawGizmos()
         {
             if (m_CurrentState == null || m_Eyes == null || m_Unit == null) return;
             Gizmos.color = m_CurrentState.m_SceneGizmoColor;
-            Gizmos.DrawWireSphere(m_Eyes.position, m_Unit.m_LookSphereCastRadius);
+            Gizmos.DrawWireSphere(m_Eyes.position, m_LookSphereCastRadius);
         }
 
         public void TransitionToState(State newState)

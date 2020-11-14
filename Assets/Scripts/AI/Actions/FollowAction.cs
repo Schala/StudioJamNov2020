@@ -23,8 +23,8 @@ namespace StudioJamNov2020.AI.Actions
 	{
 		public override void Act(StateController controller)
 		{
-			controller.m_NavMeshAgent.SetDestination(controller.m_Target.position);
-			controller.m_NavMeshAgent.isStopped = false;
+			controller.m_Unit.m_NavMeshAgent.SetDestination(controller.m_Target.position);
+			controller.m_Unit.m_NavMeshAgent.isStopped = false;
 		}
 	}
 }
