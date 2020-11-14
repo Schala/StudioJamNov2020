@@ -70,9 +70,5 @@ namespace StudioJamNov2020.Entities.Player
 
 			m_Unit.m_NavMeshAgent.SetDestination(newPosition);
 		}
-
-		void Update()
-		{
-		}
 	}
 }

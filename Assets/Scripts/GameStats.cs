@@ -15,28 +15,13 @@
  */
 
 using UnityEngine;
-using UnityEngine.AI;
 
-namespace StudioJamNov2020.Entities
+namespace StudioJamNov2020
 {
-    public class UnitController : MonoBehaviour
+    [CreateAssetMenu(menuName = "Game Stats")]
+    public class GameStats : ScriptableObject
     {
-        [Header("Movement")]
-        public float m_MoveSpeed = 1f;
-        public float m_TurnSpeed = 150f;
-
-        [HideInInspector] public NavMeshAgent m_NavMeshAgent;
-
-        private void Awake() => m_NavMeshAgent = GetComponent<NavMeshAgent>();
-
-		// to be moved
-		/*IEnumerator Fire()
-        {
-            canShoot = false;
-            var bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
-            bullet.GetComponent<Rigidbody>().AddForce(transform.forward * attackForce, ForceMode.Impulse);
-            yield return new WaitForSeconds(attackRate);
-            canShoot = true;
-        }*/
-	}
+        public float m_PoisonTick = 2f;
+        public float m_DurabilityLossRate = 0.1f;
+    }
 }

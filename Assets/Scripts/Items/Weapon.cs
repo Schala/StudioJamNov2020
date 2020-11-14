@@ -18,17 +18,16 @@ using UnityEngine;
 
 namespace StudioJamNov2020.Battle
 {
-    [CreateAssetMenu(menuName = "Game Item/Weapon")]
-    public class Weapon : ScriptableObject
+    public abstract class Weapon : Item
     {
-        [Header("Appearance")]
-        [SerializeField] string m_Name = string.Empty;
-        [SerializeField] Sprite m_Icon = null;
+        [Header("Vanity")]
+        public GameObject m_Prefab = null;
 
         [Header("Stats")]
         public float m_Range = 1f;
         public float m_Rate = 1f;
         public float m_Force = 15f;
+        public float m_Durability = 100f;
         public int m_Damage = 50;
 
         [Header("Children")]

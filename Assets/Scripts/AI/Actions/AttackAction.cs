@@ -35,7 +35,6 @@ namespace StudioJamNov2020.AI.Actions
 			{
 				if (controller.CheckIfCountDownElapsed(attackRate))
 					; // set an attack animation trigger here
-					//controller.enemy.RpcFire();
 			}
 		}
 	}
