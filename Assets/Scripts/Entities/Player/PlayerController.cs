@@ -46,7 +46,7 @@ namespace StudioJamNov2020.Entities.Player
 
 				if (Physics.Raycast(cursorPoint, out RaycastHit hit))
 				{
-					/*if (hit.collider.gameObject.CompareTag("Destructible"))
+					if (hit.collider.gameObject.CompareTag("Destructible") || hit.collider.gameObject.CompareTag("Enemy"))
 					{
 						if (canShoot)
 						{
@@ -54,7 +54,7 @@ namespace StudioJamNov2020.Entities.Player
 							CmdFire();
 						}
 					}
-					else*/ Move(hit.point);
+					else Move(hit.point);
 				}
 			}
 			else

@@ -35,13 +35,12 @@ namespace StudioJamNov2020.Battle
     public class Combatant : MonoBehaviour
     {
         [Header("Combat")]
-        public Weapon m_Weapon = null;
         public int m_MaxHealth = 100;
         public int m_MaxMana = 10;
         public int m_Strength = 1; // affects melee damage
         public int m_Dexterity = 1; // affects ranged damage
 
-        [HideInInspector] GameObject m_WeaponInstance = null;
+        [HideInInspector] GameObject m_Weapon = null;
         [HideInInspector] public int m_CurrentHealth;
         [HideInInspector] public int m_CurrentMana;
         [HideInInspector] public int m_TotalArmor = 0; // damage mitigation
@@ -51,8 +50,6 @@ namespace StudioJamNov2020.Battle
         {
             m_CurrentHealth = m_MaxHealth;
             m_CurrentMana = m_MaxMana;
-            if (m_Weapon != null && m_WeaponInstance == null)
-                m_WeaponInstance = Instantiate(m_Weapon.m_Prefab);
         }
 
         public void TakeDamage(int amount)
