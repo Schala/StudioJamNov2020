@@ -14,6 +14,7 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,7 +39,7 @@ namespace StudioJamNov2020.Entities.Player
 				}
 			}
 		}
-		
+
 		void Move(Vector3 newPosition) => m_Unit.m_NavMeshAgent.SetDestination(newPosition);
 	}
 }

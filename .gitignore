@@ -61,4 +61,4 @@ crashlytics-build.properties
 
 Assets/Packs/
 Assets/Scenes/MainScene/
-
+*.fbx

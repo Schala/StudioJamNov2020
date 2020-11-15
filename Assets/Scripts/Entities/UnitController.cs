@@ -21,21 +21,36 @@ namespace StudioJamNov2020.Entities
 {
     public class UnitController : MonoBehaviour
     {
+        static readonly int ForwardSpeedHash = Animator.StringToHash("Forward Speed");
+
         [Header("Movement")]
         public float m_MoveSpeed = 1f;
-        public float m_TurnSpeed = 150f;
+        public float m_TurnSpeed = 20f;
 
         [HideInInspector] public NavMeshAgent m_NavMeshAgent;
+        [HideInInspector] public Animator m_Animator;
 
         private void Awake()
         {
             m_NavMeshAgent = GetComponent<NavMeshAgent>();
             m_NavMeshAgent.speed = m_MoveSpeed;
             m_NavMeshAgent.angularSpeed = m_TurnSpeed;
+            m_NavMeshAgent.acceleration = m_TurnSpeed * 0.05f;
+
+            m_Animator = GetComponent<Animator>();
         }
 
-		// to be moved
-		/*IEnumerator Fire()
+        private void Update() => UpdateAnimator();
+
+        private void UpdateAnimator()
+        {
+            var localVelocity = transform.InverseTransformDirection(m_NavMeshAgent.velocity);
+            var forwardSpeed = localVelocity.z;
+            m_Animator.SetFloat(ForwardSpeedHash, forwardSpeed);
+        }
+
+        // to be moved
+        /*IEnumerator Fire()
         {
             canShoot = false;
             var bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
@@ -43,5 +58,5 @@ namespace StudioJamNov2020.Entities
             yield return new WaitForSeconds(attackRate);
             canShoot = true;
         }*/
-	}
+    }
 }

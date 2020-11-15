@@ -9,7 +9,7 @@ AnimatorController:
   m_Name: Player
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Blend
+  - m_Name: Forward Speed
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -40,31 +40,31 @@ BlendTree:
     m_Motion: {fileID: -203655887218126122, guid: 6e311792c9d7072489f7ac5d17c823d6, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 0.5
+    m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 0}
-    m_Threshold: 0.5
+    m_Motion: {fileID: -203655887218126122, guid: 86833429eae1bd14480e35f55b80ceaf, type: 3}
+    m_Threshold: 1.6789879
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 0}
-    m_Threshold: 1
+    m_Motion: {fileID: -203655887218126122, guid: 6b52c708991e2d8439f65d276ddb3d24, type: 3}
+    m_Threshold: 4.4371853
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
-  m_BlendParameter: Blend
+  m_BlendParameter: Forward Speed
   m_BlendParameterY: Blend
   m_MinThreshold: 0
-  m_MaxThreshold: 1
-  m_UseAutomaticThresholds: 1
+  m_MaxThreshold: 4.4371853
+  m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0
 --- !u!1107 &1831173499993434660
