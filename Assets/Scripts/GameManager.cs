@@ -16,21 +16,13 @@
 
 using UnityEngine;
 
-namespace StudioJamNov2020.Battle
+namespace StudioJamNov2020
 {
-    public abstract class Weapon : Item
+    public class GameManager : MonoBehaviour
     {
-        [Header("Vanity")]
-        public GameObject m_Prefab = null;
+        public float m_PoisonTick = 2f;
+        public float m_DurabilityLossRate = 0.1f;
 
-        [Header("Stats")]
-        public float m_Range = 1f;
-        public float m_Rate = 1f;
-        public float m_Force = 15f;
-        public float m_Durability = 100f;
-        public int m_Damage = 50;
-
-        [Header("Children")]
-        [SerializeField] GameObject m_Projectile = null;
-    }
+        private void Awake() => DontDestroyOnLoad(gameObject);
+	}
 }

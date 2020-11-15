@@ -16,12 +16,29 @@
 
 using UnityEngine;
 
-namespace StudioJamNov2020
+namespace StudioJamNov2020.Battle
 {
-    [CreateAssetMenu(menuName = "Game Stats")]
-    public class GameStats : ScriptableObject
+    public enum WeaponType : byte
     {
-        public float m_PoisonTick = 2f;
-        public float m_DurabilityLossRate = 0.1f;
+        Unarmed = 0,
+        Pistol,
+        Rifle,
+        OneHandedMelee,
+        TwoHandedMelee,
+        Thrown
+    }
+
+    public class Weapon : MonoBehaviour
+    {
+        [Header("Stats")]
+        public float m_Range = 1f;
+        public float m_Rate = 1f;
+        public float m_Force = 15f;
+        public float m_Durability = 100f;
+        public int m_Damage = 50;
+        public WeaponType m_Type = WeaponType.Unarmed;
+
+        [Header("Children")]
+        [SerializeField] GameObject m_ProjectilePrefab = null;
     }
 }

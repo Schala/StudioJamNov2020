@@ -35,7 +35,6 @@ namespace StudioJamNov2020.AI
         public float m_LookRange = 40f;
 
         [Header("Searching")]
-        public float m_SearchingTurnSpeed = 120f;
         public float m_SearchDuration = 4f;
 
         [HideInInspector] public UnitController m_Unit;

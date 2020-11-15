@@ -34,22 +34,30 @@ namespace StudioJamNov2020.Battle
 
     public class Combatant : MonoBehaviour
     {
+        static readonly GameObject UnarmedPrefab = Resources.Load<GameObject>("Prefabs/Unarmed");
+
         [Header("Combat")]
         public int m_MaxHealth = 100;
         public int m_MaxMana = 10;
         public int m_Strength = 1; // affects melee damage
         public int m_Dexterity = 1; // affects ranged damage
 
-        [HideInInspector] GameObject m_Weapon = null;
+        [HideInInspector] public Weapon m_Weapon = null;
         [HideInInspector] public int m_CurrentHealth;
         [HideInInspector] public int m_CurrentMana;
         [HideInInspector] public int m_TotalArmor = 0; // damage mitigation
         [HideInInspector] public CombatFlags m_Flags = CombatFlags.None;
 
-        void Start()
+        private void Awake() => m_Weapon = GetComponentInChildren<Weapon>();
+
+		void Start()
         {
             m_CurrentHealth = m_MaxHealth;
             m_CurrentMana = m_MaxMana;
+
+            if (m_Weapon == null)
+                // Don't need the instance itself, just the Weapon component. Let's spawn it at the parent's origin, though.
+                m_Weapon = Instantiate(UnarmedPrefab, Vector3.zero, Quaternion.identity, transform).GetComponent<Weapon>();
         }
 
         public void TakeDamage(int amount)

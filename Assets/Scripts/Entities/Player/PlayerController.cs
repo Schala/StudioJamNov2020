@@ -14,7 +14,6 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,21 +21,9 @@ namespace StudioJamNov2020.Entities.Player
 {
 	public class PlayerController : MonoBehaviour
 	{
-		PlayerControls m_Controls;
-		[SerializeField] LineRenderer m_LineRenderer;
 		[HideInInspector] UnitController m_Unit;
 
-		private void OnEnable() => m_Controls.Player.Enable();
-		private void OnDisable() => m_Controls.Player.Disable();
-
-		void Awake() => m_Controls = new PlayerControls();
-
-		void Start()
-		{
-			var cameraLook = FindObjectOfType<CinemachineVirtualCamera>();
-			cameraLook.m_Follow = transform;
-			cameraLook.m_LookAt = transform;
-		}
+		private void Awake() => m_Unit = GetComponent<UnitController>();
 
 		void FixedUpdate()
 		{
@@ -46,29 +33,12 @@ namespace StudioJamNov2020.Entities.Player
 
 				if (Physics.Raycast(cursorPoint, out RaycastHit hit))
 				{
-					if (hit.collider.gameObject.CompareTag("Destructible") || hit.collider.gameObject.CompareTag("Enemy"))
-					{
-						if (canShoot)
-						{
-							transform.LookAt(hit.point, Vector3.up);
-							CmdFire();
-						}
-					}
-					else Move(hit.point);
+					if (!(hit.collider.gameObject.CompareTag("Destructible") || hit.collider.gameObject.CompareTag("Enemy")))
+						Move(hit.point);
 				}
 			}
-			else
-				m_LineRenderer.enabled = false;
 		}
 		
-		void Move(Vector3 newPosition)
-		{
-			// enable and reposition the visual aid line
-			m_LineRenderer.enabled = true;
-			m_LineRenderer.SetPosition(0, transform.position);
-			m_LineRenderer.SetPosition(1, Vector3.MoveTowards(transform.position, newPosition, Mathf.Infinity));
-
-			m_Unit.m_NavMeshAgent.SetDestination(newPosition);
-		}
+		void Move(Vector3 newPosition) => m_Unit.m_NavMeshAgent.SetDestination(newPosition);
 	}
 }

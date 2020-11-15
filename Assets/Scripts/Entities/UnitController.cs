@@ -27,7 +27,12 @@ namespace StudioJamNov2020.Entities
 
         [HideInInspector] public NavMeshAgent m_NavMeshAgent;
 
-        private void Awake() => m_NavMeshAgent = GetComponent<NavMeshAgent>();
+        private void Awake()
+        {
+            m_NavMeshAgent = GetComponent<NavMeshAgent>();
+            m_NavMeshAgent.speed = m_MoveSpeed;
+            m_NavMeshAgent.angularSpeed = m_TurnSpeed;
+        }
 
 		// to be moved
 		/*IEnumerator Fire()
