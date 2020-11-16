@@ -23,8 +23,7 @@ namespace StudioJamNov2020.AI.Actions
 	{
 		public override void Act(StateController controller)
 		{
-			controller.m_Unit.m_NavMeshAgent.SetDestination(controller.m_Waypoints[controller.m_NextWaypoint].position);
-			controller.m_Unit.m_NavMeshAgent.isStopped = false;
+			controller.m_Unit.Move(controller.m_Waypoints[controller.m_NextWaypoint].position);
 
 			if (controller.m_Unit.m_NavMeshAgent.remainingDistance <= controller.m_Unit.m_NavMeshAgent.stoppingDistance && !controller.m_Unit.m_NavMeshAgent.pathPending)
 				controller.m_NextWaypoint = (controller.m_NextWaypoint + 1) % controller.m_Waypoints.Count;

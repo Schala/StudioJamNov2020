@@ -14,7 +14,7 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-using System;
+using StudioJamNov2020.Battle;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,9 +22,15 @@ namespace StudioJamNov2020.Entities.Player
 {
 	public class PlayerController : MonoBehaviour
 	{
-		[HideInInspector] UnitController m_Unit;
+		UnitController m_Unit;
+		Combatant m_Combatant;
+		RaycastHit m_LastHit;
 
-		private void Awake() => m_Unit = GetComponent<UnitController>();
+		private void Awake()
+		{
+			m_Unit = GetComponent<UnitController>();
+			m_Combatant = GetComponent<Combatant>();
+		}
 
 		void FixedUpdate()
 		{
@@ -32,14 +38,13 @@ namespace StudioJamNov2020.Entities.Player
 			{
 				var cursorPoint = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-				if (Physics.Raycast(cursorPoint, out RaycastHit hit))
+				if (Physics.Raycast(cursorPoint, out m_LastHit))
 				{
-					if (!(hit.collider.gameObject.CompareTag("Destructible") || hit.collider.gameObject.CompareTag("Enemy")))
-						Move(hit.point);
+					if (m_LastHit.collider.gameObject.CompareTag("Destructible") || m_LastHit.collider.gameObject.CompareTag("Enemy"))
+						StartCoroutine(m_Combatant.Attack());
+					else m_Unit.Move(m_LastHit.point);
 				}
 			}
 		}
-
-		void Move(Vector3 newPosition) => m_Unit.m_NavMeshAgent.SetDestination(newPosition);
 	}
 }

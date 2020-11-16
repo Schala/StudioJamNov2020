@@ -16,7 +16,7 @@
 
 using UnityEngine;
 
-namespace StudioJamNov2020.World
+namespace StudioJamNov2020.Entities
 {
 	public class Destructible : MonoBehaviour
 	{

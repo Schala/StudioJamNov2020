@@ -16,29 +16,32 @@
 
 using UnityEngine;
 
-namespace StudioJamNov2020.Battle
+public class Entity : MonoBehaviour
 {
-    public enum WeaponType : byte
+    public float m_DecayTime = 5f;
+    public float m_FadeTime = 2f;
+    [HideInInspector] public bool m_IsActive = false;
+    Renderer[] m_Renderers = null;
+    float m_FadeDelta = 0f;
+
+    void Awake()
     {
-        Knuckles = 0,
-        Pistol,
-        Rifle,
-        OneHandedMelee,
-        TwoHandedMelee,
-        Thrown
+        m_Renderers = GetComponentsInChildren<Renderer>();
+        m_FadeDelta = Time.deltaTime / m_FadeTime;
     }
 
-    public class Weapon : MonoBehaviour
+    void Update()
     {
-        [Header("Stats")]
-        public float m_Range = 1f;
-        public float m_Rate = 1f;
-        public float m_Force = 15f;
-        public float m_Durability = 100f;
-        public int m_Damage = 50;
-        public WeaponType m_Type = WeaponType.Knuckles;
+        if (!m_IsActive) return;
 
-        [Header("Children")]
-        [SerializeField] GameObject m_ProjectilePrefab = null;
+        for (int i = 0; i < m_Renderers.Length; i++)
+        {
+            var current = m_Renderers[i].material.color;
+            current.a = Mathf.Lerp(current.a, 0f, m_FadeDelta);
+            m_Renderers[i].material.color = current;
+        }
+
+        m_FadeTime -= Time.deltaTime;
+        if (m_FadeTime <= 0f) Destroy(gameObject);
     }
 }

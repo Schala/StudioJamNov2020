@@ -28,7 +28,7 @@ namespace StudioJamNov2020.Entities
         public float m_TurnSpeed = 20f;
 
         [HideInInspector] public NavMeshAgent m_NavMeshAgent;
-        [HideInInspector] public Animator m_Animator;
+        Animator m_Animator;
 
         private void Awake()
         {
@@ -49,14 +49,10 @@ namespace StudioJamNov2020.Entities
             m_Animator.SetFloat(ForwardSpeedHash, forwardSpeed);
         }
 
-        // to be moved
-        /*IEnumerator Fire()
+        public void Move(Vector3 newPosition)
         {
-            canShoot = false;
-            var bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
-            bullet.GetComponent<Rigidbody>().AddForce(transform.forward * attackForce, ForceMode.Impulse);
-            yield return new WaitForSeconds(attackRate);
-            canShoot = true;
-        }*/
+            m_NavMeshAgent.isStopped = false;
+            m_NavMeshAgent.SetDestination(newPosition);
+        }
     }
 }

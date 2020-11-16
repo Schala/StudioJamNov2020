@@ -21,10 +21,6 @@ namespace StudioJamNov2020.AI.Actions
 	[CreateAssetMenu(menuName = "AI/Actions/Follow")]
 	public class FollowAction : Action
 	{
-		public override void Act(StateController controller)
-		{
-			controller.m_Unit.m_NavMeshAgent.SetDestination(controller.m_Target.position);
-			controller.m_Unit.m_NavMeshAgent.isStopped = false;
-		}
+		public override void Act(StateController controller) => controller.m_Unit.Move(controller.m_Target.position);
 	}
 }

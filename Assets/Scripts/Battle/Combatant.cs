@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace StudioJamNov2020.Battle
@@ -34,36 +35,67 @@ namespace StudioJamNov2020.Battle
 
     public class Combatant : MonoBehaviour
     {
-        static readonly GameObject UnarmedPrefab = Resources.Load<GameObject>("Prefabs/Unarmed");
+        static readonly int PunchHash = Animator.StringToHash("Punch");
+        static readonly int PunchVariantHash = Animator.StringToHash("Punch Variant");
 
         [Header("Combat")]
         public int m_MaxHealth = 100;
         public int m_MaxMana = 10;
         public int m_Strength = 1; // affects melee damage
         public int m_Dexterity = 1; // affects ranged damage
+        public float corpseDecay = 5f; // Time until the body fades away
 
         [HideInInspector] public Weapon m_Weapon = null;
+        [HideInInspector] public Combatant m_Target = null;
         [HideInInspector] public int m_CurrentHealth;
         [HideInInspector] public int m_CurrentMana;
         [HideInInspector] public int m_TotalArmor = 0; // damage mitigation
         [HideInInspector] public CombatFlags m_Flags = CombatFlags.None;
+        Animator m_Animator = null;
 
-        private void Awake() => m_Weapon = GetComponentInChildren<Weapon>();
+        private void Awake()
+        {
+            m_Weapon = GetComponentInChildren<Weapon>();
+            m_Animator = GetComponent<Animator>();
+        }
 
 		void Start()
         {
             m_CurrentHealth = m_MaxHealth;
             m_CurrentMana = m_MaxMana;
-
-            if (m_Weapon == null)
-                // Don't need the instance itself, just the Weapon component. Let's spawn it at the parent's origin, though.
-                m_Weapon = Instantiate(UnarmedPrefab, Vector3.zero, Quaternion.identity, transform).GetComponent<Weapon>();
         }
 
         public void TakeDamage(int amount)
         {
             m_CurrentHealth = Mathf.Max(m_CurrentHealth - amount, 0);
-            if (m_CurrentHealth == 0) m_Flags |= CombatFlags.Dead;
+
+            if (m_CurrentHealth == 0)
+            {
+                m_Flags |= CombatFlags.Dead;
+
+                if (!CompareTag("Player"))
+                {
+                    GetComponent<Collider>().enabled = false; // prevent targeting
+                    GetComponent<Entity>().m_IsActive = true; // decay and fade away
+                }
+            }
+        }
+
+        public IEnumerator Attack()
+        {
+            if (m_Target.m_Flags.HasFlag(CombatFlags.Dead)) yield break;
+
+            if (m_Weapon == null) // unarmed
+            {
+                var punchVariant = Mathf.RoundToInt(UnityEngine.Random.value * 5f);
+                m_Animator.SetInteger(PunchVariantHash, punchVariant);
+                m_Animator.SetTrigger(PunchHash);
+            }
+            else
+            {
+            }
+
+            yield return new WaitForSeconds(m_Weapon == null ? 1f : m_Weapon.m_Rate);
         }
     }
 }
