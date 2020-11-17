@@ -40,8 +40,8 @@ namespace StudioJamNov2020.Entities.Player
 
 				if (Physics.Raycast(cursorPoint, out m_LastHit))
 				{
-					if (m_LastHit.collider.gameObject.CompareTag("Destructible") || m_LastHit.collider.gameObject.CompareTag("Enemy"))
-						StartCoroutine(m_Combatant.Attack());
+					if (m_LastHit.collider.CompareTag("Destructible") || m_LastHit.collider.CompareTag("Enemy"))
+						m_Combatant.Attack(m_LastHit.collider.gameObject);
 					else m_Unit.Move(m_LastHit.point);
 				}
 			}

@@ -18,8 +18,8 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    public float m_DecayTime = 5f;
-    public float m_FadeTime = 2f;
+    public float m_DecayTime = 2f;
+    public float m_FadeTime = 5f;
     [HideInInspector] public bool m_IsActive = false;
     Renderer[] m_Renderers = null;
     float m_FadeDelta = 0f;
@@ -33,6 +33,12 @@ public class Entity : MonoBehaviour
     void Update()
     {
         if (!m_IsActive) return;
+
+        if (m_DecayTime >= 0f)
+        {
+            m_DecayTime -= Time.deltaTime;
+            return;
+        }
 
         for (int i = 0; i < m_Renderers.Length; i++)
         {

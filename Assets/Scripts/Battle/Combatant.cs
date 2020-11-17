@@ -43,20 +43,21 @@ namespace StudioJamNov2020.Battle
         public int m_MaxMana = 10;
         public int m_Strength = 1; // affects melee damage
         public int m_Dexterity = 1; // affects ranged damage
-        public float corpseDecay = 5f; // Time until the body fades away
+        public CombatFlags m_Flags = CombatFlags.None;
 
         [HideInInspector] public Weapon m_Weapon = null;
-        [HideInInspector] public Combatant m_Target = null;
         [HideInInspector] public int m_CurrentHealth;
         [HideInInspector] public int m_CurrentMana;
         [HideInInspector] public int m_TotalArmor = 0; // damage mitigation
-        [HideInInspector] public CombatFlags m_Flags = CombatFlags.None;
         Animator m_Animator = null;
+        float m_Rate = 1f;
+        float m_RateDelta = 0f;
 
         private void Awake()
         {
             m_Weapon = GetComponentInChildren<Weapon>();
             m_Animator = GetComponent<Animator>();
+            m_Rate = m_Weapon == null ? 1f : m_Weapon.m_Rate;
         }
 
 		void Start()
@@ -65,8 +66,15 @@ namespace StudioJamNov2020.Battle
             m_CurrentMana = m_MaxMana;
         }
 
-        public void TakeDamage(int amount)
+		private void Update()
+		{
+            if (m_RateDelta > 0f) m_RateDelta -= Time.deltaTime;
+		}
+
+		public void TakeDamage(int amount)
         {
+            if (m_Flags.HasFlag(CombatFlags.Invulnerable)) return;
+
             m_CurrentHealth = Mathf.Max(m_CurrentHealth - amount, 0);
 
             if (m_CurrentHealth == 0)
@@ -81,9 +89,11 @@ namespace StudioJamNov2020.Battle
             }
         }
 
-        public IEnumerator Attack()
+        public void Attack(GameObject target)
         {
-            if (m_Target.m_Flags.HasFlag(CombatFlags.Dead)) yield break;
+            if (m_RateDelta > 0f) return;
+
+            transform.LookAt(target.transform.position, Vector3.up);
 
             if (m_Weapon == null) // unarmed
             {
@@ -95,7 +105,7 @@ namespace StudioJamNov2020.Battle
             {
             }
 
-            yield return new WaitForSeconds(m_Weapon == null ? 1f : m_Weapon.m_Rate);
+            m_RateDelta = m_Rate;
         }
     }
 }

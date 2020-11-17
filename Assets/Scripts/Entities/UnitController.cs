@@ -40,7 +40,10 @@ namespace StudioJamNov2020.Entities
             m_Animator = GetComponent<Animator>();
         }
 
-        private void Update() => UpdateAnimator();
+        private void Update()
+        {
+            if (m_Animator != null) UpdateAnimator();
+        }
 
         private void UpdateAnimator()
         {

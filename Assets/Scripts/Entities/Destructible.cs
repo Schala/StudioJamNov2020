@@ -25,7 +25,7 @@ namespace StudioJamNov2020.Entities
 
 		private void OnCollisionEnter(Collision collision)
 		{
-			if (collision.gameObject.CompareTag("Projectile"))
+			if (collision.gameObject.CompareTag("Player"))
 			{
 				var fractured = Instantiate(m_FracturedPrefab, transform.position, transform.rotation);
 				var debris = fractured.GetComponentsInChildren<Debris>();

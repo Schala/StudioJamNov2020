@@ -21,10 +21,41 @@ namespace StudioJamNov2020.Entities
 	public class Debris : MonoBehaviour
 	{
 		public Vector3 m_Force = Vector3.zero;
-		public float m_Lifetime = 5f;
+		[SerializeField] Material m_PieceMaterial = null;
+		[SerializeField] float m_Lifetime = 5f;
+		[SerializeField] float m_PieceMass = 0.5f;
 		Rigidbody[] m_Bodies;
 
-		private void Awake() => m_Bodies = GetComponentsInChildren<Rigidbody>();
+		private void Awake()
+		{
+			// Programmatically add rigidbodies, materials and colliders to each piece to save headaches.
+			AddPhysics();
+			AddMaterial();
+
+			m_Bodies = GetComponentsInChildren<Rigidbody>();
+		}
+
+		void AddPhysics()
+		{
+			var transforms = GetComponentsInChildren<Transform>();
+			for (int i = 0; i < transforms.Length; i++)
+			{
+				var body = transforms[i].gameObject.AddComponent<Rigidbody>();
+				body.mass = m_PieceMass;
+
+				var collider = transforms[i].gameObject.AddComponent<MeshCollider>();
+				collider.convex = true;
+				collider.cookingOptions = MeshColliderCookingOptions.CookForFasterSimulation | MeshColliderCookingOptions.EnableMeshCleaning |
+					MeshColliderCookingOptions.UseFastMidphase | MeshColliderCookingOptions.WeldColocatedVertices;
+			}
+		}
+
+		void AddMaterial()
+		{
+			var renderers = GetComponentsInChildren<Renderer>();
+			for (int i = 0; i < renderers.Length; i++)
+				renderers[i].material = m_PieceMaterial;
+		}
 
 		void Start()
 		{
@@ -34,7 +65,9 @@ namespace StudioJamNov2020.Entities
 				m_Bodies[i].AddForce(m_Force, ForceMode.Impulse);
 			}
 
-			Destroy(gameObject, m_Lifetime);
+			var entity = GetComponent<Entity>();
+			entity.m_DecayTime = m_Lifetime;
+			entity.m_IsActive = true;
 		}
 	}
 }
