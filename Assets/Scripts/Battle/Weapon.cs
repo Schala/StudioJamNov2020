@@ -37,7 +37,6 @@ namespace StudioJamNov2020.Battle
         public float m_Durability = 100f;
         public int m_Damage = 50;
         public WeaponType m_Type = WeaponType.Knuckles;
-        [HideInInspector] public bool m_CoolingDown = false;
 
         [Header("Children")]
         [SerializeField] GameObject m_ProjectilePrefab = null;

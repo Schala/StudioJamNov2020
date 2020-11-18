@@ -34,7 +34,6 @@ namespace StudioJamNov2020.Entities.Player
 		Combatant m_Combatant;
 		PlayerState m_State = PlayerState.Idle;
 		RaycastHit m_LastHit;
-		bool attacking = false;
 
 		private void Awake()
 		{
@@ -60,10 +59,10 @@ namespace StudioJamNov2020.Entities.Player
 					if (m_Combatant.IsInRange()) m_State = PlayerState.Attacking;
 					break;
 				case PlayerState.Attacking:
-					if (!attacking && !GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
+					if (!GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
 					{
 						m_Unit.Stop();
-						m_Combatant.Attack();
+						StartCoroutine(m_Combatant.Attack());
 						CheckNewAction();
 						m_State = PlayerState.Idle;
 					}
@@ -82,21 +81,20 @@ namespace StudioJamNov2020.Entities.Player
 
 			for (int i = 0; i < hits.Length; i++)
 			{
-				var enemy = hits[i].collider.GetComponent<Combatant>();
-				var destructible = hits[i].collider.GetComponent<Destructible>();
-
-				if (enemy == null && destructible == null) continue;
-				m_LastHit = hits[i];
-				m_Combatant.m_Target = hits[i].collider.gameObject;
-
-				if (m_Combatant.IsInRange())
+				if (hits[i].collider.CompareTag("Enemy") || hits[i].collider.CompareTag("Destructible"))
 				{
-					m_State = PlayerState.Attacking;
+					m_LastHit = hits[i];
+					m_Combatant.m_Target = hits[i].collider.gameObject;
+
+					if (m_Combatant.IsInRange())
+					{
+						m_State = PlayerState.Attacking;
+						return true;
+					}
+
+					m_State = PlayerState.MovingWithinRange;
 					return true;
 				}
-
-				m_State = PlayerState.MovingWithinRange;
-				return true;
 			}
 
 			// No target found in ray hit, so let's clear it. The player probably clicked away from the target.

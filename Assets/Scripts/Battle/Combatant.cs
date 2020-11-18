@@ -40,55 +40,49 @@ namespace StudioJamNov2020.Battle
         static readonly int PunchVariantHash = Animator.StringToHash("Punch Variant");
 
         [Header("Combat")]
+        public Weapon m_Weapon = null;
+        public Weapon m_SecondaryWeapon = null;
+        public Weapon m_LeftHand = null;
+        public Weapon m_RightHand = null;
+        public float m_UnarmedRate = 1f;
+        public float m_UnarmedRange = 2f;
         public int m_MaxHealth = 100;
         public int m_MaxMana = 10;
         public int m_Strength = 1; // affects melee damage
         public int m_Dexterity = 1; // affects ranged damage
         public CombatFlags m_Flags = CombatFlags.None;
 
-        [HideInInspector] public Weapon m_Weapon = null;
         [HideInInspector] public GameObject m_Target = null;
         [HideInInspector] public int m_CurrentHealth;
         [HideInInspector] public int m_CurrentMana;
         [HideInInspector] public int m_TotalArmor = 0; // damage mitigation
+        [HideInInspector] public float m_Rate;
+        [HideInInspector] public float m_Range;
         Animator m_Animator = null;
-        public float m_Rate;
-        public float m_Range;
-        bool m_UnarmedCoolingDown = false;
+        bool m_OnCoolDown = false;
 
         private void Awake()
         {
-            m_Weapon = GetComponentInChildren<Weapon>();
             m_Animator = GetComponent<Animator>();
-
-            ChangeWeapon();
+            if (m_Weapon == null) m_Weapon = m_LeftHand;
+            if (m_SecondaryWeapon == null) m_SecondaryWeapon = m_RightHand;
         }
 
 		void Start()
         {
             m_CurrentHealth = m_MaxHealth;
             m_CurrentMana = m_MaxMana;
+            if (m_Weapon != null && m_SecondaryWeapon != null) UpdateWeapon();
         }
 
-        public void ChangeWeapon()
+        public void UpdateWeapon()
         {
-            if (m_Weapon != null)
-            {
-                m_Rate = m_Weapon.m_Rate;
-                m_Range = m_Weapon.m_Range;
-            }
-            else // unarmed
-            {
-                m_Rate = 1f;
-                m_Range = 2f;
-            }
+            // find a good middle ground
+            m_Rate = (m_Weapon.m_Rate + m_SecondaryWeapon.m_Rate) / 2f;
+            m_Range = (m_Weapon.m_Range + m_SecondaryWeapon.m_Rate) / 2f;
         }
 
         public bool IsInRange() => Vector3.Distance(transform.position, m_Target.transform.position) < m_Range;
-
-		private void Update()
-		{
-		}
 
 		public void TakeDamage(int amount)
         {
@@ -108,22 +102,25 @@ namespace StudioJamNov2020.Battle
             }
         }
 
-        public void InvokeAttack() => Invoke(nameof(Attack), m_Rate);
-
-        public void Attack()
+        public IEnumerator Attack()
         {
-            if (m_Weapon == null) // unarmed
+            if (m_OnCoolDown) yield break;
+
+            switch (m_Weapon.m_Type)
             {
+                case WeaponType.Knuckles:
                     var punchVariant = Mathf.RoundToInt(UnityEngine.Random.value * 5f);
-                    print("blep!");
                     m_Animator.SetInteger(PunchVariantHash, punchVariant);
                     m_Animator.SetTrigger(PunchHash);
-            }
-            else
-            {
+                    break;
+                default: break;
             }
 
+            m_OnCoolDown = true;
             m_Target = null;
+
+            yield return new WaitForSeconds(m_Rate);
+            m_OnCoolDown = false;
         }
     }
 }

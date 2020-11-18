@@ -504,9 +504,12 @@ MonoBehaviour:
   m_Dexterity: 1
   m_Flags: 16
   m_Weapon: {fileID: 0}
+  m_Target: {fileID: 0}
   m_CurrentHealth: 0
   m_CurrentMana: 0
   m_TotalArmor: 0
+  m_Rate: 0
+  m_Range: 0
 --- !u!1 &1637547268
 GameObject:
   m_ObjectHideFlags: 3
