@@ -20,11 +20,21 @@ using UnityEngine.InputSystem;
 
 namespace StudioJamNov2020.Entities.Player
 {
+	public enum PlayerState : byte
+	{
+		Idle = 0,
+		Moving,
+		MovingWithinRange,
+		Attacking
+	}
+
 	public class PlayerController : MonoBehaviour
 	{
 		UnitController m_Unit;
 		Combatant m_Combatant;
+		PlayerState m_State = PlayerState.Idle;
 		RaycastHit m_LastHit;
+		bool attacking = false;
 
 		private void Awake()
 		{
@@ -34,17 +44,84 @@ namespace StudioJamNov2020.Entities.Player
 
 		void FixedUpdate()
 		{
-			if (Mouse.current.leftButton.isPressed)
+			switch (m_State)
 			{
-				var cursorPoint = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-				if (Physics.Raycast(cursorPoint, out m_LastHit))
-				{
-					if (m_LastHit.collider.CompareTag("Destructible") || m_LastHit.collider.CompareTag("Enemy"))
-						m_Combatant.Attack(m_LastHit.collider.gameObject);
-					else m_Unit.Move(m_LastHit.point);
-				}
+				case PlayerState.Idle:
+					CheckNewAction();
+					break;
+				case PlayerState.Moving:
+					m_Unit.Move(m_LastHit.point);
+					CheckNewAction();
+					if (m_Unit.HasArrived()) m_State = PlayerState.Idle;
+					break;
+				case PlayerState.MovingWithinRange:
+					m_Unit.Move(m_LastHit.point);
+					CheckNewAction();
+					if (m_Combatant.IsInRange()) m_State = PlayerState.Attacking;
+					break;
+				case PlayerState.Attacking:
+					if (!attacking && !GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
+					{
+						m_Unit.Stop();
+						m_Combatant.Attack();
+						CheckNewAction();
+						m_State = PlayerState.Idle;
+					}
+					break;
 			}
+		}
+
+		Ray GetMouseRay() => Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+		bool IsMousePressed() => Mouse.current.leftButton.isPressed;
+
+		bool CheckTarget()
+		{
+			var cursorPoint = GetMouseRay();
+			var hits = Physics.RaycastAll(cursorPoint);
+
+			for (int i = 0; i < hits.Length; i++)
+			{
+				var enemy = hits[i].collider.GetComponent<Combatant>();
+				var destructible = hits[i].collider.GetComponent<Destructible>();
+
+				if (enemy == null && destructible == null) continue;
+				m_LastHit = hits[i];
+				m_Combatant.m_Target = hits[i].collider.gameObject;
+
+				if (m_Combatant.IsInRange())
+				{
+					m_State = PlayerState.Attacking;
+					return true;
+				}
+
+				m_State = PlayerState.MovingWithinRange;
+				return true;
+			}
+
+			// No target found in ray hit, so let's clear it. The player probably clicked away from the target.
+			m_Combatant.m_Target = null;
+			return false;
+		}
+
+		bool CheckMove()
+		{
+			var cursorPoint = GetMouseRay();
+
+			if (Physics.Raycast(cursorPoint, out m_LastHit))
+			{
+				m_State = PlayerState.Moving;
+				return true;
+			}
+
+			return false;
+		}
+
+		void CheckNewAction()
+		{
+			if (!IsMousePressed()) return;
+			if (CheckTarget()) return;
+			CheckMove();
 		}
 	}
 }

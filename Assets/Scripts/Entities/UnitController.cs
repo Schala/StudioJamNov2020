@@ -57,5 +57,9 @@ namespace StudioJamNov2020.Entities
             m_NavMeshAgent.isStopped = false;
             m_NavMeshAgent.SetDestination(newPosition);
         }
+
+        public bool HasArrived() => m_NavMeshAgent.remainingDistance <= m_NavMeshAgent.stoppingDistance && !m_NavMeshAgent.pathPending;
+
+        public void Stop() => m_NavMeshAgent.isStopped = true;
     }
 }

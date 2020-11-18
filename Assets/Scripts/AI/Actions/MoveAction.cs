@@ -25,7 +25,7 @@ namespace StudioJamNov2020.AI.Actions
 		{
 			controller.m_Unit.Move(controller.m_Waypoints[controller.m_NextWaypoint].position);
 
-			if (controller.m_Unit.m_NavMeshAgent.remainingDistance <= controller.m_Unit.m_NavMeshAgent.stoppingDistance && !controller.m_Unit.m_NavMeshAgent.pathPending)
+			if (controller.m_Unit.HasArrived())
 				controller.m_NextWaypoint = (controller.m_NextWaypoint + 1) % controller.m_Waypoints.Count;
 		}
 	}

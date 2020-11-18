@@ -14,6 +14,7 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+using StudioJamNov2020.Entities.Player;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -46,18 +47,21 @@ namespace StudioJamNov2020.Battle
         public CombatFlags m_Flags = CombatFlags.None;
 
         [HideInInspector] public Weapon m_Weapon = null;
+        [HideInInspector] public GameObject m_Target = null;
         [HideInInspector] public int m_CurrentHealth;
         [HideInInspector] public int m_CurrentMana;
         [HideInInspector] public int m_TotalArmor = 0; // damage mitigation
         Animator m_Animator = null;
-        float m_Rate = 1f;
-        float m_RateDelta = 0f;
+        public float m_Rate;
+        public float m_Range;
+        bool m_UnarmedCoolingDown = false;
 
         private void Awake()
         {
             m_Weapon = GetComponentInChildren<Weapon>();
             m_Animator = GetComponent<Animator>();
-            m_Rate = m_Weapon == null ? 1f : m_Weapon.m_Rate;
+
+            ChangeWeapon();
         }
 
 		void Start()
@@ -66,9 +70,24 @@ namespace StudioJamNov2020.Battle
             m_CurrentMana = m_MaxMana;
         }
 
+        public void ChangeWeapon()
+        {
+            if (m_Weapon != null)
+            {
+                m_Rate = m_Weapon.m_Rate;
+                m_Range = m_Weapon.m_Range;
+            }
+            else // unarmed
+            {
+                m_Rate = 1f;
+                m_Range = 2f;
+            }
+        }
+
+        public bool IsInRange() => Vector3.Distance(transform.position, m_Target.transform.position) < m_Range;
+
 		private void Update()
 		{
-            if (m_RateDelta > 0f) m_RateDelta -= Time.deltaTime;
 		}
 
 		public void TakeDamage(int amount)
@@ -89,23 +108,22 @@ namespace StudioJamNov2020.Battle
             }
         }
 
-        public void Attack(GameObject target)
+        public void InvokeAttack() => Invoke(nameof(Attack), m_Rate);
+
+        public void Attack()
         {
-            if (m_RateDelta > 0f) return;
-
-            transform.LookAt(target.transform.position, Vector3.up);
-
             if (m_Weapon == null) // unarmed
             {
-                var punchVariant = Mathf.RoundToInt(UnityEngine.Random.value * 5f);
-                m_Animator.SetInteger(PunchVariantHash, punchVariant);
-                m_Animator.SetTrigger(PunchHash);
+                    var punchVariant = Mathf.RoundToInt(UnityEngine.Random.value * 5f);
+                    print("blep!");
+                    m_Animator.SetInteger(PunchVariantHash, punchVariant);
+                    m_Animator.SetTrigger(PunchHash);
             }
             else
             {
             }
 
-            m_RateDelta = m_Rate;
+            m_Target = null;
         }
     }
 }
