@@ -152,8 +152,6 @@ MonoBehaviour:
   m_SecondaryWeapon: {fileID: 0}
   m_LeftHand: {fileID: 8373613606086190472}
   m_RightHand: {fileID: 1242186071741467369}
-  m_UnarmedRate: 1
-  m_UnarmedRange: 2
   m_MaxHealth: 100
   m_MaxMana: 10
   m_Strength: 1
@@ -222,14 +220,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7606766a3d2536d45b579c880f553d61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Range: 2
+  m_Range: 3
   m_Rate: 1
   m_Force: 1
   m_Durability: -1
   m_Damage: 1
   m_Type: 0
   m_ProjectilePrefab: {fileID: 0}
-  m_OnCoolDown: 0
 --- !u!1 &6003991084425559167
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,14 +284,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7606766a3d2536d45b579c880f553d61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Range: 2
+  m_Range: 3
   m_Rate: 1
   m_Force: 1
   m_Durability: -1
   m_Damage: 1
   m_Type: 0
   m_ProjectilePrefab: {fileID: 0}
-  m_OnCoolDown: 0
 --- !u!1001 &1112035776397718926
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -86,6 +86,9 @@ namespace StudioJamNov2020.Entities.Player
 					m_LastHit = hits[i];
 					m_Combatant.m_Target = hits[i].collider.gameObject;
 
+					if (m_Combatant.m_Target.CompareTag("Enemy"))
+						transform.LookAt(hits[i].point, Vector3.up);
+
 					if (m_Combatant.IsInRange())
 					{
 						m_State = PlayerState.Attacking;
@@ -120,6 +123,7 @@ namespace StudioJamNov2020.Entities.Player
 			if (!IsMousePressed()) return;
 			if (CheckTarget()) return;
 			CheckMove();
+			print(m_LastHit.point);
 		}
 	}
 }

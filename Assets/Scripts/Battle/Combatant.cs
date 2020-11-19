@@ -44,8 +44,6 @@ namespace StudioJamNov2020.Battle
         public Weapon m_SecondaryWeapon = null;
         public Weapon m_LeftHand = null;
         public Weapon m_RightHand = null;
-        public float m_UnarmedRate = 1f;
-        public float m_UnarmedRange = 2f;
         public int m_MaxHealth = 100;
         public int m_MaxMana = 10;
         public int m_Strength = 1; // affects melee damage
