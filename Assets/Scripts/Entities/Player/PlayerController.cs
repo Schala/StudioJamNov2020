@@ -91,7 +91,7 @@ namespace StudioJamNov2020.Entities.Player
 
 					if (m_Combatant.IsInRange())
 					{
-						m_State = PlayerState.Attacking;
+						if (m_Combatant.m_Target != null) m_State = PlayerState.Attacking;
 						return true;
 					}
 
@@ -123,7 +123,6 @@ namespace StudioJamNov2020.Entities.Player
 			if (!IsMousePressed()) return;
 			if (CheckTarget()) return;
 			CheckMove();
-			print(m_LastHit.point);
 		}
 	}
 }

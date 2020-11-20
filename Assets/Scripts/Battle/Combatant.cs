@@ -80,7 +80,11 @@ namespace StudioJamNov2020.Battle
             m_Range = (m_Weapon.m_Range + m_SecondaryWeapon.m_Rate) / 2f;
         }
 
-        public bool IsInRange() => Vector3.Distance(transform.position, m_Target.transform.position) < m_Range;
+        public bool IsInRange()
+        {
+            if (m_Target == null) return true; // crash mitigation
+            return Vector3.Distance(transform.position, m_Target.transform.position) < m_Range;
+        }
 
 		public void TakeDamage(int amount)
         {
@@ -100,9 +104,23 @@ namespace StudioJamNov2020.Battle
             }
         }
 
+        public void ActivateWeapons()
+        {
+            m_Weapon.GetComponent<Collider>().enabled = true;
+            m_SecondaryWeapon.GetComponent<Collider>().enabled = true;
+        }
+
+        public void DeactivateWeapons()
+        {
+            m_Weapon.GetComponent<Collider>().enabled = false;
+            m_SecondaryWeapon.GetComponent<Collider>().enabled = false;
+        }
+
         public IEnumerator Attack()
         {
             if (m_OnCoolDown) yield break;
+            m_Weapon.GetComponent<Collider>().enabled = true;
+            m_SecondaryWeapon.GetComponent<Collider>().enabled = true;
 
             switch (m_Weapon.m_Type)
             {
@@ -116,6 +134,8 @@ namespace StudioJamNov2020.Battle
 
             m_OnCoolDown = true;
             m_Target = null;
+            m_Weapon.GetComponent<Collider>().enabled = false;
+            m_SecondaryWeapon.GetComponent<Collider>().enabled = false;
 
             yield return new WaitForSeconds(m_Rate);
             m_OnCoolDown = false;
