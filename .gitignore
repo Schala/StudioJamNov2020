@@ -61,6 +61,7 @@ crashlytics-build.properties
 
 Assets/Packs/
 Assets/Scenes/MainScene/
+NavMesh-*
 *.fbx
 *.mp3
 *.mp4
