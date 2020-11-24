@@ -63,7 +63,6 @@ namespace StudioJamNov2020.Entities
 			{
 				m_Force.y = Random.value;
 				m_Bodies[i].AddForce(m_Force, ForceMode.Impulse);
-				print(gameObject.name);
 			}
 
 			var entity = GetComponent<Entity>();
