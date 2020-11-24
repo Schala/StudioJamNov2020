@@ -20,10 +20,12 @@ using UnityEngine.InputSystem;
 
 namespace StudioJamNov2020.UI
 {
-    public class CameraZoomControl : MonoBehaviour
+    public class CameraController : MonoBehaviour
     {
         [SerializeField] float m_ZoomSpeed = 0.05f;
-        [SerializeField] float m_StartZoom = 3.5f;
+        [SerializeField] float m_StartZoom = 10f;
+        [SerializeField] float m_MinZoom = 20f;
+        [SerializeField] float m_MaxZoom = 5f;
         CinemachineFollowZoom m_FollowZoom;
 
         void Awake() => m_FollowZoom = GetComponent<CinemachineFollowZoom>();
@@ -34,6 +36,7 @@ namespace StudioJamNov2020.UI
             var scrollInput = Mouse.current.scroll.ReadValue();
             if (scrollInput.y == 0) return;
             m_FollowZoom.m_Width += scrollInput.y * -m_ZoomSpeed;
+            m_FollowZoom.m_Width = Mathf.Clamp(m_FollowZoom.m_Width, m_MaxZoom, m_MinZoom);
         }
     }
 }
