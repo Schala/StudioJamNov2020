@@ -36,8 +36,9 @@ namespace StudioJamNov2020.Battle
 
     public class Combatant : MonoBehaviour
     {
-        static readonly int PunchHash = Animator.StringToHash("Punch");
+        static readonly int AttackHash = Animator.StringToHash("Attack");
         static readonly int PunchVariantHash = Animator.StringToHash("Punch Variant");
+        static readonly int Melee2HVariant = Animator.StringToHash("2H Melee Variant");
 
         [Header("Combat")]
         public Weapon m_Weapon = null;
@@ -118,6 +119,18 @@ namespace StudioJamNov2020.Battle
             m_SecondaryWeapon.GetComponent<Collider>().enabled = false;
         }
 
+        public void ShowWeapons()
+        {
+            m_Weapon.enabled = true;
+            m_SecondaryWeapon.enabled = true;
+        }
+
+        public void HideWeapons()
+        {
+            m_Weapon.enabled = false;
+            m_SecondaryWeapon.enabled = false;
+        }
+
         public IEnumerator Attack()
         {
             if (m_OnCoolDown) yield break;
@@ -125,9 +138,14 @@ namespace StudioJamNov2020.Battle
             switch (m_Weapon.m_Type)
             {
                 case WeaponType.Knuckles:
-                    var punchVariant = Mathf.RoundToInt(UnityEngine.Random.value * 5f);
+                    var punchVariant = Mathf.RoundToInt(UnityEngine.Random.Range(0, 4));
                     m_Animator.SetInteger(PunchVariantHash, punchVariant);
-                    m_Animator.SetTrigger(PunchHash);
+                    m_Animator.SetTrigger(AttackHash);
+                    break;
+                case WeaponType.TwoHandedMelee:
+                    var melee2HVariant = Mathf.RoundToInt(UnityEngine.Random.Range(0, 2));
+                    m_Animator.SetInteger(Melee2HVariant, melee2HVariant);
+                    m_Animator.SetTrigger(AttackHash);
                     break;
                 default: break;
             }
