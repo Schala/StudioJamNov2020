@@ -21,6 +21,6 @@ namespace StudioJamNov2020.AI.Decisions
 	[CreateAssetMenu(menuName = "AI/Decisions/Active")]
 	public class ActiveDecision : Decision
 	{
-		public override bool Decide(StateController controller) => controller.m_Target.gameObject.activeSelf;
+		public override bool Decide(StateController controller) => controller.m_Combatant.gameObject.activeSelf;
 	}
 }

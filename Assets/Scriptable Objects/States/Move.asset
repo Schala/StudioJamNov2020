@@ -18,4 +18,4 @@ MonoBehaviour:
   - decision: {fileID: 11400000, guid: 4ff6b3c372de90943aed9a9c95c6cc05, type: 2}
     trueState: {fileID: 11400000, guid: 54c118250fdec924fb7ed06707746487, type: 2}
     falseState: {fileID: 11400000, guid: b07e8af0ba712f243a3e0a254f4a5b86, type: 2}
-  m_SceneGizmoColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_SceneGizmoColor: {r: 0, g: 1, b: 0, a: 1}

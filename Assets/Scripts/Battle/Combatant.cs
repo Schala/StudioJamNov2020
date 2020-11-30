@@ -66,6 +66,8 @@ namespace StudioJamNov2020.Battle
             if (m_SecondaryWeapon == null) m_SecondaryWeapon = m_RightHand;
         }
 
+        private void Update() => Debug.DrawRay(transform.position, transform.forward * m_Range, Color.red);
+
 		void Start()
         {
             m_CurrentHealth = m_MaxHealth;
@@ -119,8 +121,6 @@ namespace StudioJamNov2020.Battle
         public IEnumerator Attack()
         {
             if (m_OnCoolDown) yield break;
-            m_Weapon.GetComponent<Collider>().enabled = true;
-            m_SecondaryWeapon.GetComponent<Collider>().enabled = true;
 
             switch (m_Weapon.m_Type)
             {
@@ -133,9 +133,7 @@ namespace StudioJamNov2020.Battle
             }
 
             m_OnCoolDown = true;
-            m_Target = null;
-            m_Weapon.GetComponent<Collider>().enabled = false;
-            m_SecondaryWeapon.GetComponent<Collider>().enabled = false;
+            if (!gameObject.CompareTag("Enemy")) m_Target = null;
 
             yield return new WaitForSeconds(m_Rate);
             m_OnCoolDown = false;

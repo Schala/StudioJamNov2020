@@ -23,13 +23,15 @@ namespace StudioJamNov2020.AI.Decisions
 	{
 		public override bool Decide(StateController controller)
 		{
-			Debug.DrawRay(controller.m_Eyes.position, controller.m_Eyes.forward.normalized, Color.green);
+			var hits = Physics.OverlapSphere(controller.transform.position, controller.m_LookRadius);
 
-			if (Physics.SphereCast(controller.m_Eyes.position, controller.m_LookSphereCastRadius, controller.m_Eyes.forward, out RaycastHit hit,
-				controller.m_LookRange) && hit.collider.CompareTag("Player"))
+			for (int i = 0; i < hits.Length; i++)
 			{
-				controller.m_Target = hit.transform;
-				return true;
+				if (hits[i].CompareTag("Player"))
+				{
+					controller.m_Combatant.m_Target = hits[i].gameObject;
+					return true;
+				}
 			}
 
 			return false;

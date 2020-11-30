@@ -29,6 +29,7 @@ namespace StudioJamNov2020.Entities
 
         [HideInInspector] public NavMeshAgent m_NavMeshAgent;
         Animator m_Animator;
+        Rigidbody m_Body;
 
         private void Awake()
         {
@@ -38,12 +39,22 @@ namespace StudioJamNov2020.Entities
             m_NavMeshAgent.acceleration = m_TurnSpeed * 0.05f;
 
             m_Animator = GetComponent<Animator>();
+            m_Body = GetComponent<Rigidbody>();
         }
 
         private void Update()
         {
             if (m_Animator != null) UpdateAnimator();
         }
+
+        private void FixedUpdate()
+        {
+            // Attempt to fix the skyrocketing velocity bug
+            if (!SafeVelocity()) m_Body.velocity = Vector3.zero;
+        }
+
+        bool SafeVelocity() => m_Body.velocity.x <= m_MoveSpeed && m_Body.velocity.y <= m_MoveSpeed && m_Body.velocity.z <= m_MoveSpeed &&
+            m_Body.velocity.x >= -m_MoveSpeed && m_Body.velocity.y >= -m_MoveSpeed && m_Body.velocity.z >= -m_MoveSpeed;
 
         private void UpdateAnimator()
         {

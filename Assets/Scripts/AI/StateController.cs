@@ -14,6 +14,7 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+using StudioJamNov2020.Battle;
 using StudioJamNov2020.Entities;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,6 @@ namespace StudioJamNov2020.AI
 {
     public class StateController : MonoBehaviour
     {
-        public Transform m_Eyes;
         public List<Transform> m_Waypoints;
         public bool m_AIActive;
 
@@ -31,18 +31,21 @@ namespace StudioJamNov2020.AI
         public State m_RemainState;
 
         [Header("Looking")]
-        public float m_LookSphereCastRadius = 1f;
-        public float m_LookRange = 40f;
+        public float m_LookRadius = 1f;
 
         [Header("Searching")]
         public float m_SearchDuration = 4f;
 
+        [HideInInspector] public Combatant m_Combatant;
         [HideInInspector] public UnitController m_Unit;
         [HideInInspector] public int m_NextWaypoint;
-        [HideInInspector] public Transform m_Target;
         [HideInInspector] public float m_StateTimeElapsed;
 
-        private void Awake() => m_Unit = GetComponent<UnitController>();
+        private void Awake()
+        {
+            m_Combatant = GetComponent<Combatant>();
+            m_Unit = GetComponent<UnitController>();
+        }
 
         void Update()
         {
@@ -54,9 +57,9 @@ namespace StudioJamNov2020.AI
 
         private void OnDrawGizmos()
         {
-            if (m_CurrentState == null || m_Eyes == null || m_Unit == null) return;
+            if (m_CurrentState == null|| m_Unit == null) return;
             Gizmos.color = m_CurrentState.m_SceneGizmoColor;
-            Gizmos.DrawWireSphere(m_Eyes.position, m_LookSphereCastRadius);
+            Gizmos.DrawWireSphere(transform.position, m_LookRadius);
         }
 
         public void TransitionToState(State newState)

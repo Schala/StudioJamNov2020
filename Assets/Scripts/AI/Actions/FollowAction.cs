@@ -21,6 +21,21 @@ namespace StudioJamNov2020.AI.Actions
 	[CreateAssetMenu(menuName = "AI/Actions/Follow")]
 	public class FollowAction : Action
 	{
-		public override void Act(StateController controller) => controller.m_Unit.Move(controller.m_Target.position);
+		public override void Act(StateController controller)
+		{
+			var combatant = controller.m_Combatant;
+			if (combatant.m_Target == null) return;
+
+			controller.m_Unit.Move(combatant.m_Target.transform.position);
+
+			if (combatant.IsInRange())
+			{
+				if (controller.CheckIfCountDownElapsed(combatant.m_Rate))
+				{
+					controller.m_Unit.Stop();
+					controller.StartCoroutine(combatant.Attack());
+				}
+			}
+		}
 	}
 }
