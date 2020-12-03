@@ -34,6 +34,7 @@ namespace StudioJamNov2020.Entities.Player
 		Combatant m_Combatant;
 		PlayerState m_State = PlayerState.Idle;
 		RaycastHit m_LastHit;
+		bool m_Exiting = false;
 
 		private void Awake()
 		{
@@ -43,6 +44,8 @@ namespace StudioJamNov2020.Entities.Player
 
 		void FixedUpdate()
 		{
+			if (m_Unit.m_NavMeshAgent.isStopped) return;
+
 			switch (m_State)
 			{
 				case PlayerState.Idle:
@@ -62,12 +65,18 @@ namespace StudioJamNov2020.Entities.Player
 					if (!GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
 					{
 						m_Unit.Stop();
+						if (m_Combatant.m_Target != null) transform.LookAt(m_Combatant.m_Target.transform, Vector3.up);
 						StartCoroutine(m_Combatant.Attack());
 						CheckNewAction();
 						m_State = PlayerState.Idle;
 					}
 					break;
 			}
+		}
+
+		private void Update()
+		{
+			if (m_Combatant.m_Flags.HasFlag(CombatFlags.Dead)) Destroy(gameObject);
 		}
 
 		Ray GetMouseRay() => Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -124,5 +133,19 @@ namespace StudioJamNov2020.Entities.Player
 			if (CheckTarget()) return;
 			CheckMove();
 		}
+
+		private void OnDestroy()
+		{
+			if (m_Exiting) return;
+
+			var gameManager = FindObjectOfType<GameManager>();
+			var audio = gameManager.GetComponent<AudioSource>();
+			gameManager.m_GameOverText.SetActive(true);
+			audio.Stop();
+			audio.clip = gameManager.m_GameOverBGM;
+			audio.Play();
+		}
+
+		private void OnApplicationQuit() => m_Exiting = true;
 	}
 }

@@ -14,14 +14,16 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-using StudioJamNov2020.Entities.Player;
+using StudioJamNov2020.AI;
+using StudioJamNov2020.Entities;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 namespace StudioJamNov2020.Battle
 {
-    [Flags]
+	[Flags]
     public enum CombatFlags : byte
     {
         None = 0,
@@ -51,6 +53,9 @@ namespace StudioJamNov2020.Battle
         public int m_Dexterity = 1; // affects ranged damage
         public CombatFlags m_Flags = CombatFlags.None;
 
+        [Header("UI")]
+        public TMP_Text damageText = null;
+
         [HideInInspector] public GameObject m_Target = null;
         [HideInInspector] public int m_CurrentHealth;
         [HideInInspector] public int m_CurrentMana;
@@ -74,6 +79,8 @@ namespace StudioJamNov2020.Battle
             m_CurrentHealth = m_MaxHealth;
             m_CurrentMana = m_MaxMana;
             if (m_Weapon != null && m_SecondaryWeapon != null) UpdateWeapon();
+            if (m_Weapon != null) m_Weapon.m_Owner = gameObject;
+            if (m_SecondaryWeapon != null) m_SecondaryWeapon.m_Owner = gameObject;
         }
 
         public void UpdateWeapon()
@@ -91,12 +98,22 @@ namespace StudioJamNov2020.Battle
 
 		public void TakeDamage(int amount)
         {
+            damageText.text = amount.ToString();
             if (m_Flags.HasFlag(CombatFlags.Invulnerable)) return;
 
             m_CurrentHealth = Mathf.Max(m_CurrentHealth - amount, 0);
-
-            if (m_CurrentHealth == 0)
+            if (CompareTag("Player"))
             {
+                var gameManager = FindObjectOfType<GameManager>();
+                var healthText = gameManager.m_HealthText.GetComponent<TMP_Text>();
+                healthText.text = m_CurrentHealth.ToString();
+            }
+
+            if (m_CurrentHealth <= 0)
+            {
+                if (TryGetComponent(out StateController controller)) controller.enabled = false;
+                m_Animator.enabled = false;
+                damageText.text = string.Empty;
                 m_Flags |= CombatFlags.Dead;
 
                 if (!CompareTag("Player"))
@@ -107,44 +124,37 @@ namespace StudioJamNov2020.Battle
             }
         }
 
-        public void ActivateWeapons()
+        public void ShowWeapons(bool showing)
         {
-            m_Weapon.GetComponent<Collider>().enabled = true;
-            m_SecondaryWeapon.GetComponent<Collider>().enabled = true;
+            m_Weapon.gameObject.SetActive(showing);
+            m_SecondaryWeapon.gameObject.SetActive(showing);
         }
 
-        public void DeactivateWeapons()
-        {
-            m_Weapon.GetComponent<Collider>().enabled = false;
-            m_SecondaryWeapon.GetComponent<Collider>().enabled = false;
-        }
-
-        public void ShowWeapons()
-        {
-            m_Weapon.enabled = true;
-            m_SecondaryWeapon.enabled = true;
-        }
-
-        public void HideWeapons()
-        {
-            m_Weapon.enabled = false;
-            m_SecondaryWeapon.enabled = false;
-        }
+        public void Shoot() => m_Weapon.Shoot();
 
         public IEnumerator Attack()
         {
             if (m_OnCoolDown) yield break;
 
+            ShowWeapons(true);
+            m_Animator.SetLayerWeight(0, 0f);
+
             switch (m_Weapon.m_Type)
             {
                 case WeaponType.Knuckles:
                     var punchVariant = Mathf.RoundToInt(UnityEngine.Random.Range(0, 4));
+                    m_Animator.SetLayerWeight(1, 1f);
                     m_Animator.SetInteger(PunchVariantHash, punchVariant);
                     m_Animator.SetTrigger(AttackHash);
                     break;
                 case WeaponType.TwoHandedMelee:
                     var melee2HVariant = Mathf.RoundToInt(UnityEngine.Random.Range(0, 2));
+                    m_Animator.SetLayerWeight(2, 1f);
                     m_Animator.SetInteger(Melee2HVariant, melee2HVariant);
+                    m_Animator.SetTrigger(AttackHash);
+                    break;
+                case WeaponType.Pistol:
+                    m_Animator.SetLayerWeight(3, 1f);
                     m_Animator.SetTrigger(AttackHash);
                     break;
                 default: break;
@@ -154,6 +164,18 @@ namespace StudioJamNov2020.Battle
             if (!gameObject.CompareTag("Enemy")) m_Target = null;
 
             yield return new WaitForSeconds(m_Rate);
+            ShowWeapons(false);
+            m_Animator.SetLayerWeight(0, 1f);
+            GetComponent<UnitController>().m_NavMeshAgent.isStopped = false;
+
+            switch (m_Weapon.m_Type)
+            {
+                case WeaponType.Knuckles: m_Animator.SetLayerWeight(1, 0f); break;
+                case WeaponType.TwoHandedMelee: m_Animator.SetLayerWeight(2, 0f); break;
+                case WeaponType.Pistol: m_Animator.SetLayerWeight(3, 0f); break;
+                default: break;
+            }
+
             m_OnCoolDown = false;
         }
     }

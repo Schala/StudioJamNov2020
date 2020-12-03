@@ -14,6 +14,7 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+using StudioJamNov2020.World;
 using UnityEngine;
 
 namespace StudioJamNov2020
@@ -22,6 +23,11 @@ namespace StudioJamNov2020
     {
         public float m_PoisonTick = 2f;
         public float m_DurabilityLossRate = 0.1f;
+        public AudioClip m_GameOverBGM = null;
+        public Canvas m_UICanvas = null;
+        public LevelChunk[] m_LevelChunks = null;
+        public GameObject m_GameOverText = null;
+        public GameObject m_HealthText = null;
 
         private void Awake() => DontDestroyOnLoad(gameObject);
 	}

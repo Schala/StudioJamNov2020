@@ -46,6 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PoisonTick: 2
   m_DurabilityLossRate: 0.1
+  m_GameOverBGM: {fileID: 8300000, guid: 2fabc93f8fd863a408d8682c21efbd61, type: 3}
+  m_UICanvas: {fileID: 0}
 --- !u!82 &28883660721111094
 AudioSource:
   m_ObjectHideFlags: 0
