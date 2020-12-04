@@ -15,7 +15,6 @@
  */
 
 using StudioJamNov2020.AI;
-using StudioJamNov2020.Entities;
 using System;
 using System.Collections;
 using TMPro;
@@ -41,6 +40,7 @@ namespace StudioJamNov2020.Battle
         static readonly int AttackHash = Animator.StringToHash("Attack");
         static readonly int PunchVariantHash = Animator.StringToHash("Punch Variant");
         static readonly int Melee2HVariant = Animator.StringToHash("2H Melee Variant");
+        static readonly int AttackingHash = Animator.StringToHash("Attacking");
 
         [Header("Combat")]
         public Weapon m_Weapon = null;
@@ -56,7 +56,7 @@ namespace StudioJamNov2020.Battle
         [Header("UI")]
         public TMP_Text damageText = null;
 
-        [HideInInspector] public GameObject m_Target = null;
+        /*[HideInInspector]*/ public GameObject m_Target = null;
         [HideInInspector] public int m_CurrentHealth;
         [HideInInspector] public int m_CurrentMana;
         [HideInInspector] public int m_TotalArmor = 0; // damage mitigation
@@ -102,6 +102,7 @@ namespace StudioJamNov2020.Battle
             if (m_Flags.HasFlag(CombatFlags.Invulnerable)) return;
 
             m_CurrentHealth = Mathf.Max(m_CurrentHealth - amount, 0);
+            print(m_CurrentHealth);
             if (CompareTag("Player"))
             {
                 var gameManager = FindObjectOfType<GameManager>();
@@ -130,7 +131,7 @@ namespace StudioJamNov2020.Battle
             m_SecondaryWeapon.gameObject.SetActive(showing);
         }
 
-        public void Shoot() => m_Weapon.Shoot();
+		public void Shoot() => m_Weapon.Shoot();
 
         public IEnumerator Attack()
         {
@@ -155,18 +156,23 @@ namespace StudioJamNov2020.Battle
                     break;
                 case WeaponType.Pistol:
                     m_Animator.SetLayerWeight(3, 1f);
-                    m_Animator.SetTrigger(AttackHash);
+                    m_Animator.SetBool(AttackingHash, true);
                     break;
                 default: break;
             }
 
             m_OnCoolDown = true;
-            if (!gameObject.CompareTag("Enemy")) m_Target = null;
 
             yield return new WaitForSeconds(m_Rate);
+
+            m_OnCoolDown = false;
+        }
+
+        public void Disengage()
+        {
             ShowWeapons(false);
+            m_Animator.SetBool(AttackingHash, false);
             m_Animator.SetLayerWeight(0, 1f);
-            GetComponent<UnitController>().m_NavMeshAgent.isStopped = false;
 
             switch (m_Weapon.m_Type)
             {
@@ -175,8 +181,6 @@ namespace StudioJamNov2020.Battle
                 case WeaponType.Pistol: m_Animator.SetLayerWeight(3, 0f); break;
                 default: break;
             }
-
-            m_OnCoolDown = false;
         }
     }
 }

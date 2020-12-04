@@ -23,10 +23,9 @@ namespace StudioJamNov2020.Battle
 		[HideInInspector] public GameObject m_Owner = null;
 		[HideInInspector] public Weapon m_Parent = null;
 
-		private void OnCollisionEnter(Collision collision)
+		private void OnTriggerEnter(Collider other)
 		{
-			print("l");
-			if (collision.gameObject.GetInstanceID() != m_Owner.GetInstanceID() && collision.gameObject.TryGetComponent(out Combatant combatant))
+			if (other.gameObject.GetInstanceID() != m_Owner.GetInstanceID() && other.TryGetComponent(out Combatant combatant))
 				combatant.TakeDamage(Random.Range(Mathf.Max(m_Parent.m_Damage - 3, 1), m_Parent.m_Damage + 3));
 			Destroy(gameObject);
 		}

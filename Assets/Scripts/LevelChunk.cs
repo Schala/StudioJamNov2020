@@ -30,16 +30,10 @@ namespace StudioJamNov2020.World
     {
         public ChunkFlags m_Flags = ChunkFlags.None;
 
-        // Start is called before the first frame update
-        void Start()
-        {
+        [Range(0f, 100f)]
+        public float m_Probability = 100f;
 
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        public Transform[] m_Waypoints = null;
+        public Transform[] m_Exits = null;
     }
 }

@@ -62,14 +62,8 @@ namespace StudioJamNov2020.Entities.Player
 					if (m_Combatant.IsInRange()) m_State = PlayerState.Attacking;
 					break;
 				case PlayerState.Attacking:
-					if (!GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
-					{
-						m_Unit.Stop();
-						if (m_Combatant.m_Target != null) transform.LookAt(m_Combatant.m_Target.transform, Vector3.up);
-						StartCoroutine(m_Combatant.Attack());
-						CheckNewAction();
-						m_State = PlayerState.Idle;
-					}
+					m_Unit.Stop();
+					StartCoroutine(m_Combatant.Attack());
 					break;
 			}
 		}
@@ -77,6 +71,17 @@ namespace StudioJamNov2020.Entities.Player
 		private void Update()
 		{
 			if (m_Combatant.m_Flags.HasFlag(CombatFlags.Dead)) Destroy(gameObject);
+
+			if (Mouse.current.leftButton.wasReleasedThisFrame)
+			{
+				m_Combatant.Disengage();
+				m_Unit.Continue();
+				CheckNewAction();
+				m_State = PlayerState.Idle;
+			}
+
+			if (m_State == PlayerState.Attacking)
+				if (m_Combatant.m_Target != null) transform.LookAt(m_Combatant.m_Target.transform, Vector3.up);
 		}
 
 		Ray GetMouseRay() => Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -94,9 +99,6 @@ namespace StudioJamNov2020.Entities.Player
 				{
 					m_LastHit = hits[i];
 					m_Combatant.m_Target = hits[i].collider.gameObject;
-
-					if (m_Combatant.m_Target.CompareTag("Enemy"))
-						transform.LookAt(hits[i].point, Vector3.up);
 
 					if (m_Combatant.IsInRange())
 					{

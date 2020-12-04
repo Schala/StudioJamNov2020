@@ -1108,6 +1108,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WM_SF_Wp01_a
       objectReference: {fileID: 0}
+    - target: {fileID: 6681734062935430989, guid: 23eef191fee95eb429633821b1ecdd82, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23eef191fee95eb429633821b1ecdd82, type: 3}
 --- !u!114 &3434391232100530340 stripped

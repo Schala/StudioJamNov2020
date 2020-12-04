@@ -59,12 +59,16 @@ namespace StudioJamNov2020.Battle
 
 		public void Shoot()
         {
+            if (m_Audio != null) m_AudioSource.clip = m_Audio[Random.Range(0, m_Audio.Length - 1)];
+            m_AudioSource.pitch = Random.Range(0.5f, 1.5f);
             m_AudioSource.Play();
-            var projectile = Instantiate(m_ProjectilePrefab, m_ProjectileSpawnPoint.transform.position, Quaternion.identity);
+            var projectile = Instantiate(m_ProjectilePrefab, m_ProjectileSpawnPoint.transform);
             var projectileBehavior = projectile.GetComponent<Projectile>();
+            projectile.transform.rotation = Quaternion.LookRotation(m_Owner.transform.forward);
             projectileBehavior.m_Owner = m_Owner;
             projectileBehavior.m_Parent = this;
             projectile.GetComponent<Rigidbody>().AddForce(m_Owner.transform.forward * m_projectileSpeed, ForceMode.Impulse);
+            projectile.transform.parent = null;
             Destroy(projectile, m_projectileLifetime);
         }
 	}

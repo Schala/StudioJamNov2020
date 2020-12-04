@@ -15,7 +15,9 @@
  */
 
 using StudioJamNov2020.World;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace StudioJamNov2020
 {
@@ -28,7 +30,33 @@ namespace StudioJamNov2020
         public LevelChunk[] m_LevelChunks = null;
         public GameObject m_GameOverText = null;
         public GameObject m_HealthText = null;
+        [SerializeField] int m_MaxChunks = 64;
+        List<LevelChunk> m_SpawnedChunks = null;
+        int m_PauseDelay = 300;
+        bool m_Paused = false;
 
         private void Awake() => DontDestroyOnLoad(gameObject);
+
+        private void Start() => GenerateChunks();
+
+		private void Update()
+		{
+            if (m_PauseDelay > 0) m_PauseDelay--;
+
+            if (m_PauseDelay <= 0 && Keyboard.current.enterKey.wasPressedThisFrame)
+            {
+                m_Paused = !m_Paused;
+                Time.timeScale = m_Paused ? 0f : 1f;
+                m_PauseDelay = 300;
+            }
+		}
+
+        void GenerateChunks()
+        {
+            Debug.Assert(m_LevelChunks != null);
+
+            m_SpawnedChunks = new List<LevelChunk>();
+
+        }
 	}
 }

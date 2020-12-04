@@ -80,14 +80,16 @@ MonoBehaviour:
   m_Rate: 1
   m_Force: 15
   m_Durability: 100
-  m_Damage: 50
+  m_Damage: 1
   m_Type: 1
-  m_Audio: []
+  m_Audio:
+  - {fileID: 8300000, guid: 6696c485840ec6349a1f76d017f3d0e7, type: 3}
+  - {fileID: 8300000, guid: 5c2e22055e9ab4343ae2b7d20ae33d11, type: 3}
   m_Owner: {fileID: 0}
   m_ProjectilePrefab: {fileID: 3133383237378237083, guid: 4b75c3cba4c3ba04d93aca998a7e0eea, type: 3}
   m_ProjectileSpawnPoint: {fileID: 555144887951077252}
-  m_projectileSpeed: 500
-  m_projectileLifetime: 3
+  m_projectileSpeed: 10
+  m_projectileLifetime: 2
 --- !u!82 &6681734062935430989
 AudioSource:
   m_ObjectHideFlags: 0
