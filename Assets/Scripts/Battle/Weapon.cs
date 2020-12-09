@@ -38,7 +38,7 @@ namespace StudioJamNov2020.Battle
         public int m_Damage = 50;
         public WeaponType m_Type = WeaponType.Knuckles;
         public AudioClip[] m_Audio = null;
-        [HideInInspector] public GameObject m_Owner = null;
+        [HideInInspector] public Combatant m_Owner = null;
         AudioSource m_AudioSource = null;
 
         [Header("Ranged")]
@@ -53,8 +53,9 @@ namespace StudioJamNov2020.Battle
 
 		private void OnTriggerEnter(Collider other)
 		{
-            if (other.gameObject.GetInstanceID() != m_Owner.GetInstanceID() && other.TryGetComponent(out Combatant combatant))
-                combatant.TakeDamage(Random.Range(Mathf.Max(m_Damage - 15, 1), m_Damage + 5));
+            if (other.TryGetComponent(out Combatant combatant))
+                if (combatant.m_Faction != m_Owner.m_Faction)
+                    combatant.TakeDamage(Random.Range(Mathf.Max(m_Damage - 15, 1), m_Damage + 5));
 		}
 
 		public void Shoot()
@@ -65,7 +66,6 @@ namespace StudioJamNov2020.Battle
             var projectile = Instantiate(m_ProjectilePrefab, m_ProjectileSpawnPoint.transform);
             var projectileBehavior = projectile.GetComponent<Projectile>();
             projectile.transform.rotation = Quaternion.LookRotation(m_Owner.transform.forward);
-            projectileBehavior.m_Owner = m_Owner;
             projectileBehavior.m_Parent = this;
             projectile.GetComponent<Rigidbody>().AddForce(m_Owner.transform.forward * m_projectileSpeed, ForceMode.Impulse);
             projectile.transform.parent = null;

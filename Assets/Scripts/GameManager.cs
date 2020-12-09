@@ -29,7 +29,6 @@ namespace StudioJamNov2020
         public Canvas m_UICanvas = null;
         //public LevelChunkEntry[] m_LevelChunks = null;
         public GameObject m_GameOverText = null;
-        public GameObject m_HealthText = null;
         /*[SerializeField] int m_MaxChunks = 64;
         List<LevelChunk> m_SpawnedChunks = null;*/
         int m_PauseDelay = 300;

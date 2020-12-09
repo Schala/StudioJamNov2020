@@ -145,6 +145,7 @@ namespace StudioJamNov2020.Entities.Player
 			gameManager.m_GameOverText.SetActive(true);
 			audio.Stop();
 			audio.clip = gameManager.m_GameOverBGM;
+			audio.volume = 1f;
 			audio.Play();
 		}
 

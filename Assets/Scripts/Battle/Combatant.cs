@@ -16,6 +16,7 @@
 
 using StudioJamNov2020.AI;
 using StudioJamNov2020.Entities;
+using StudioJamNov2020.UI;
 using System;
 using System.Collections;
 using TMPro;
@@ -53,12 +54,10 @@ namespace StudioJamNov2020.Battle
         public int m_Strength = 1; // affects melee damage
         public int m_Dexterity = 1; // affects ranged damage
         public CombatFlags m_Flags = CombatFlags.None;
+        public int m_Faction = 0;
 
         [Header("Audio")]
         public AudioClip[] m_Death = null;
-
-        [Header("UI")]
-        public TMP_Text damageText = null;
 
         [HideInInspector] public GameObject m_Target = null;
         [HideInInspector] public int m_CurrentHealth;
@@ -67,12 +66,14 @@ namespace StudioJamNov2020.Battle
         [HideInInspector] public float m_Rate;
         [HideInInspector] public float m_Range;
         Animator m_Animator = null;
+        HealthBar m_HealthBar = null;
         bool m_OnCoolDown = false;
         bool m_DeathAudioPlayed = false;
 
         private void Awake()
         {
             m_Animator = GetComponent<Animator>();
+            m_HealthBar = GetComponent<HealthBar>();
             if (m_Weapon == null) m_Weapon = m_LeftHand;
             if (m_SecondaryWeapon == null) m_SecondaryWeapon = m_RightHand;
         }
@@ -83,9 +84,10 @@ namespace StudioJamNov2020.Battle
         {
             m_CurrentHealth = m_MaxHealth;
             m_CurrentMana = m_MaxMana;
+            m_HealthBar.Current = m_MaxHealth;
             if (m_Weapon != null && m_SecondaryWeapon != null) UpdateWeapon();
-            if (m_Weapon != null) m_Weapon.m_Owner = gameObject;
-            if (m_SecondaryWeapon != null) m_SecondaryWeapon.m_Owner = gameObject;
+            if (m_Weapon != null) m_Weapon.m_Owner = this;
+            if (m_SecondaryWeapon != null) m_SecondaryWeapon.m_Owner = this;
         }
 
         public void UpdateWeapon()
@@ -103,22 +105,15 @@ namespace StudioJamNov2020.Battle
 
 		public void TakeDamage(int amount)
         {
-            damageText.text = amount.ToString();
             if (m_Flags.HasFlag(CombatFlags.Invulnerable)) return;
 
             m_CurrentHealth = Mathf.Max(m_CurrentHealth - amount, 0);
-
-            if (CompareTag("Player"))
-            {
-                var gameManager = FindObjectOfType<GameManager>();
-                var healthText = gameManager.m_HealthText.GetComponent<TMP_Text>();
-                healthText.text = m_CurrentHealth.ToString();
-            }
+            m_HealthBar.Current = m_CurrentHealth;
 
             if (m_CurrentHealth <= 0)
             {
                 m_Animator.enabled = false;
-                damageText.text = string.Empty;
+                m_HealthBar.Current = 0;
                 m_Flags |= CombatFlags.Dead;
 
                 if (!CompareTag("Player"))

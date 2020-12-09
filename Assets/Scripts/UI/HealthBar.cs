@@ -15,19 +15,50 @@
  */
 
 using UnityEngine;
+using UnityEngine.UI;
 
-namespace StudioJamNov2020.Battle
+namespace StudioJamNov2020.UI
 {
-    public class Projectile : MonoBehaviour
-    {
-		[HideInInspector] public Weapon m_Parent = null;
+	public class HealthBar : MonoBehaviour
+	{
+		public Gradient m_Gradient;
+		public Slider m_Slider;
+		public Image m_Fill;
+		int m_MaxValue;
+		int m_Current;
 
-		private void OnTriggerEnter(Collider other)
+		public int Current
 		{
-			if (other.TryGetComponent(out Combatant combatant))
-				if (combatant.m_Faction != m_Parent.m_Owner.m_Faction)
-					combatant.TakeDamage(Random.Range(Mathf.Max(m_Parent.m_Damage - 3, 1), m_Parent.m_Damage + 3));
-			Destroy(gameObject);
+			get
+			{
+				return m_Current;
+			}
+
+			set
+			{
+				if (value < 0) return;
+
+				m_Current = value;
+				m_Slider.value = value;
+				m_Fill.color = m_Gradient.Evaluate(m_Slider.normalizedValue);
+			}
+		}
+
+		public int MaxValue
+		{
+			get
+			{
+				return m_MaxValue;
+			}
+
+			set
+			{
+				if (value < m_Current) return;
+
+				m_MaxValue = value;
+				m_Slider.maxValue = value;
+				m_Fill.color = m_Gradient.Evaluate(1f);
+			}
 		}
 	}
 }
