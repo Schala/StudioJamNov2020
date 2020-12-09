@@ -8,6 +8,7 @@ TagManager:
   - Environment
   - Weapon
   - Enemy
+  - Chunk
   layers:
   - Default
   - TransparentFX
@@ -19,8 +20,8 @@ TagManager:
   - 
   - Entities
   - Aesthetic
-  - 
-  - 
+  - Level
+  - Helpers
   - 
   - 
   - 

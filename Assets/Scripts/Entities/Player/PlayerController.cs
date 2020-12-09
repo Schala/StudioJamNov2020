@@ -120,7 +120,7 @@ namespace StudioJamNov2020.Entities.Player
 		{
 			var cursorPoint = GetMouseRay();
 
-			if (Physics.Raycast(cursorPoint, out m_LastHit))
+			if (Physics.Raycast(cursorPoint, out m_LastHit, Mathf.Infinity, LayerMask.GetMask("Level")))
 			{
 				m_State = PlayerState.Moving;
 				return true;

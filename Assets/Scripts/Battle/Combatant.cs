@@ -15,6 +15,7 @@
  */
 
 using StudioJamNov2020.AI;
+using StudioJamNov2020.Entities;
 using System;
 using System.Collections;
 using TMPro;
@@ -53,10 +54,13 @@ namespace StudioJamNov2020.Battle
         public int m_Dexterity = 1; // affects ranged damage
         public CombatFlags m_Flags = CombatFlags.None;
 
+        [Header("Audio")]
+        public AudioClip[] m_Death = null;
+
         [Header("UI")]
         public TMP_Text damageText = null;
 
-        /*[HideInInspector]*/ public GameObject m_Target = null;
+        [HideInInspector] public GameObject m_Target = null;
         [HideInInspector] public int m_CurrentHealth;
         [HideInInspector] public int m_CurrentMana;
         [HideInInspector] public int m_TotalArmor = 0; // damage mitigation
@@ -64,6 +68,7 @@ namespace StudioJamNov2020.Battle
         [HideInInspector] public float m_Range;
         Animator m_Animator = null;
         bool m_OnCoolDown = false;
+        bool m_DeathAudioPlayed = false;
 
         private void Awake()
         {
@@ -102,7 +107,7 @@ namespace StudioJamNov2020.Battle
             if (m_Flags.HasFlag(CombatFlags.Invulnerable)) return;
 
             m_CurrentHealth = Mathf.Max(m_CurrentHealth - amount, 0);
-            print(m_CurrentHealth);
+
             if (CompareTag("Player"))
             {
                 var gameManager = FindObjectOfType<GameManager>();
@@ -112,15 +117,23 @@ namespace StudioJamNov2020.Battle
 
             if (m_CurrentHealth <= 0)
             {
-                if (TryGetComponent(out StateController controller)) controller.enabled = false;
                 m_Animator.enabled = false;
                 damageText.text = string.Empty;
                 m_Flags |= CombatFlags.Dead;
 
                 if (!CompareTag("Player"))
                 {
+                    GetComponent<StateController>().enabled = false;
                     GetComponent<Collider>().enabled = false; // prevent targeting
-                    GetComponent<Entity>().m_IsActive = true; // decay and fade away
+                    GetComponent<UnitController>().Stop();
+                    if (!m_DeathAudioPlayed && TryGetComponent(out AudioSource audio))
+                    {
+                        audio.Stop();
+                        audio.clip = m_Death[0];
+                        audio.Play();
+                        m_DeathAudioPlayed = true;
+                    }
+                    Destroy(gameObject, 5);
                 }
             }
         }

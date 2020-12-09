@@ -19,21 +19,75 @@ using UnityEngine;
 
 namespace StudioJamNov2020.World
 {
-    [Flags]
-    public enum ChunkFlags : byte
+    /*public enum LevelChunkType : byte
     {
-        None = 0,
-        Entrance = 1
+        Normal = 0,
+        Entrance,
+        End,
+        Exit
     }
+
+    [Flags]
+    public enum LevelChunkTypeMask : byte
+    {
+        Normal = 1,
+        Entrance = 2,
+        End = 4,
+        Exit = 8,
+        All = 15
+    }
+
+	[Serializable]
+    public class LevelChunkEntry
+    {
+        public LevelChunk m_Chunk;
+
+        [Range(0f, 100f)]
+        public float m_MinProbability = 0f;
+
+        [Range(0f, 100f)]
+        public float m_MaxProbability = 0f;
+    }*/
 
     public class LevelChunk : MonoBehaviour
     {
-        public ChunkFlags m_Flags = ChunkFlags.None;
-
-        [Range(0f, 100f)]
-        public float m_Probability = 100f;
-
+        /*public LevelChunkType m_Type = LevelChunkType.Normal;
         public Transform[] m_Waypoints = null;
         public Transform[] m_Exits = null;
-    }
+        public LevelChunkTypeMask m_ValidChildTypeMask;
+        [HideInInspector] public int m_Vacancies = 0;
+
+        private void Awake()
+        {
+            // All exits are open
+            for (int i = 0; i < m_Exits.Length; i++)
+                m_Vacancies |= 1 << i;
+        }
+
+		public Transform CheckVacantPoint(out int index)
+        {
+            for (int i = 0; i < m_Exits.Length; i++)
+            {
+                if ((m_Vacancies & (1 << i)) == 0)
+                {
+                    index = i;
+                    return m_Exits[i];
+                }
+            }
+            index = -1;
+            return null;
+        }
+
+        public bool CheckValidChild(LevelChunk chunk) => ((int)chunk.m_Type & (int)m_ValidChildTypeMask) == 0;
+
+        public void MatchExits(Transform prev, Transform next)
+        {
+            var correctiveRotation = Azimuth(-prev.forward) - Azimuth(next.forward);
+            transform.RotateAround(next.position, Vector3.up, correctiveRotation);
+            var correctivePosition = prev.position - next.position;
+            transform.position += correctivePosition;
+        }
+
+        public static float Azimuth(Vector3 vector) => Vector3.Angle(Vector3.forward, vector) * Mathf.Sign(vector.x);*/
+	}
 }

@@ -27,17 +27,23 @@ namespace StudioJamNov2020
         public float m_DurabilityLossRate = 0.1f;
         public AudioClip m_GameOverBGM = null;
         public Canvas m_UICanvas = null;
-        public LevelChunk[] m_LevelChunks = null;
+        //public LevelChunkEntry[] m_LevelChunks = null;
         public GameObject m_GameOverText = null;
         public GameObject m_HealthText = null;
-        [SerializeField] int m_MaxChunks = 64;
-        List<LevelChunk> m_SpawnedChunks = null;
+        /*[SerializeField] int m_MaxChunks = 64;
+        List<LevelChunk> m_SpawnedChunks = null;*/
         int m_PauseDelay = 300;
         bool m_Paused = false;
 
-        private void Awake() => DontDestroyOnLoad(gameObject);
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
 
-        private void Start() => GenerateChunks();
+            /*for (int i = 0; i < m_LevelChunks.Length; i++)
+                Debug.Assert(m_LevelChunks[i].m_MaxProbability != 0f);*/
+        }
+
+        //private void Start() => GenerateChunks();
 
 		private void Update()
 		{
@@ -51,12 +57,52 @@ namespace StudioJamNov2020
             }
 		}
 
+        /*int GetValidChunk(int parentChunk)
+        {
+            var rng = Random.Range(0f, 100f);
+            int chosenIndex = 0;
+
+            for (int j = 0; j < m_LevelChunks.Length; j++)
+                if (rng >= m_LevelChunks[j].m_MinProbability && rng <= m_LevelChunks[j].m_MaxProbability)
+                    chosenIndex = j;
+
+            if (parentChunk < 0 || m_LevelChunks[parentChunk].m_Chunk.CheckValidChild(m_LevelChunks[chosenIndex].m_Chunk))
+                return chosenIndex;
+
+            return GetValidChunk(parentChunk);
+        }
+
         void GenerateChunks()
         {
             Debug.Assert(m_LevelChunks != null);
 
             m_SpawnedChunks = new List<LevelChunk>();
+            int prevChunkIndex = -1;
 
-        }
+            for (int i = 0; i < m_MaxChunks; i++)
+            {
+                LevelChunk chunk = null;
+                var chosenIndex = GetValidChunk(prevChunkIndex);
+
+                if (prevChunkIndex < 0)
+                    chunk = Instantiate(m_LevelChunks[chosenIndex].m_Chunk, Vector3.zero, Quaternion.identity);
+                else
+                {
+                    var prevChunk = m_LevelChunks[prevChunkIndex].m_Chunk;
+                    var chunkPrefab = m_LevelChunks[chosenIndex].m_Chunk;
+                    var vacancy = prevChunk.CheckVacantPoint(out int vacancyIndex);
+                    var exitIndex = Random.Range(0, chunkPrefab.m_Exits.Length - 1);
+                    chunk = Instantiate(chunkPrefab, Vector3.zero, Quaternion.identity);
+                    var exit = chunk.m_Exits[exitIndex];
+
+                    chunk.MatchExits(vacancy, exit);
+                    prevChunk.m_Vacancies &= ~(1 << vacancyIndex);
+                    chunk.m_Vacancies &= ~(1 << exitIndex);
+                }
+
+                if (chunk != null) m_SpawnedChunks.Add(chunk);
+                prevChunkIndex = chosenIndex;
+            }
+        }*/
 	}
 }

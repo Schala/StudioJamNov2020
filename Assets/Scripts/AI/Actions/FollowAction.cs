@@ -27,12 +27,14 @@ namespace StudioJamNov2020.AI.Actions
 			if (combatant.m_Target == null) return;
 
 			controller.m_Unit.Move(combatant.m_Target.transform.position);
+			controller.StartCoroutine(controller.AudioPlay());
 
 			if (combatant.IsInRange())
 			{
 				if (controller.CheckIfCountDownElapsed(combatant.m_Rate))
 				{
 					controller.m_Unit.Stop();
+					controller.transform.LookAt(combatant.m_Target.transform, Vector3.up);
 					controller.StartCoroutine(combatant.Attack());
 				}
 			}

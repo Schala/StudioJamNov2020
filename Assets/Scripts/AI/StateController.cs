@@ -16,14 +16,14 @@
 
 using StudioJamNov2020.Battle;
 using StudioJamNov2020.Entities;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 namespace StudioJamNov2020.AI
 {
     public class StateController : MonoBehaviour
     {
-        public List<Transform> m_Waypoints;
+        public Transform[] m_Waypoints;
         public bool m_AIActive;
 
         [Header("States")]
@@ -36,15 +36,22 @@ namespace StudioJamNov2020.AI
         [Header("Searching")]
         public float m_SearchDuration = 4f;
 
+        [Header("Audio")]
+        public AudioClip[] m_Normal = null;
+        public float m_AudioInterval = 2f;
+
         [HideInInspector] public Combatant m_Combatant;
         [HideInInspector] public UnitController m_Unit;
         [HideInInspector] public int m_NextWaypoint;
         [HideInInspector] public float m_StateTimeElapsed;
+        [HideInInspector] public AudioSource m_AudioSource = null;
 
         private void Awake()
         {
+            m_AudioSource = GetComponent<AudioSource>();
             m_Combatant = GetComponent<Combatant>();
             m_Unit = GetComponent<UnitController>();
+            m_AudioSource.pitch = Random.Range(0.75f, 1.25f);
         }
 
         void Update()
@@ -76,5 +83,12 @@ namespace StudioJamNov2020.AI
         }
 
         private void OnExitState() => m_StateTimeElapsed = 0f;
+
+        public IEnumerator AudioPlay()
+        {
+            if (m_AudioSource.isPlaying) yield break;
+            m_AudioSource.clip = m_Normal[0];
+            m_AudioSource.Play();
+        }
     }
 }

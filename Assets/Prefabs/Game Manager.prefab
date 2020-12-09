@@ -48,6 +48,8 @@ MonoBehaviour:
   m_DurabilityLossRate: 0.1
   m_GameOverBGM: {fileID: 8300000, guid: 2fabc93f8fd863a408d8682c21efbd61, type: 3}
   m_UICanvas: {fileID: 0}
+  m_GameOverText: {fileID: 0}
+  m_HealthText: {fileID: 0}
 --- !u!82 &28883660721111094
 AudioSource:
   m_ObjectHideFlags: 0
@@ -60,7 +62,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7e33f2b6e9676d84fa324926862a8c27, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.15
+  m_Volume: 0.075
   m_Pitch: 1
   Loop: 0
   Mute: 0

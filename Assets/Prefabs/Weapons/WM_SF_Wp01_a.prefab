@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Rate: 1
   m_Force: 15
   m_Durability: 100
-  m_Damage: 1
+  m_Damage: 20
   m_Type: 1
   m_Audio:
   - {fileID: 8300000, guid: 6696c485840ec6349a1f76d017f3d0e7, type: 3}
