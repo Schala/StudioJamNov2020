@@ -123,6 +123,10 @@ namespace StudioJamNov2020.Battle
                     GetComponent<UnitController>().Stop();
                     if (!m_DeathAudioPlayed && TryGetComponent(out AudioSource audio))
                     {
+                        var gameMgr = FindObjectOfType<GameManager>();
+                        var scoreText = gameMgr.m_ScoreText.GetComponent<TMP_Text>();
+                        gameMgr.m_Score += 50;
+                        scoreText.text = gameMgr.m_Score.ToString();
                         audio.Stop();
                         audio.clip = m_Death[0];
                         audio.Play();

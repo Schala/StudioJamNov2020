@@ -231,6 +231,7 @@ MonoBehaviour:
   m_SearchDuration: 4
   m_Normal:
   - {fileID: 8300000, guid: 90f3f5f8b65faa14db5fdde2868d0c1e, type: 3}
+  - {fileID: 8300000, guid: e39514e2fc0ef704db27e449a445be2b, type: 3}
   m_AudioInterval: 2
   m_Combatant: {fileID: 0}
   m_Unit: {fileID: 0}
@@ -258,6 +259,7 @@ MonoBehaviour:
   m_Strength: 1
   m_Dexterity: 1
   m_Flags: 0
+  m_Faction: 0
   m_Death:
   - {fileID: 8300000, guid: 801bf6294406cff42b1957612b3eb08d, type: 3}
   m_Target: {fileID: 0}

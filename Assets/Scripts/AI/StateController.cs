@@ -87,7 +87,7 @@ namespace StudioJamNov2020.AI
         public IEnumerator AudioPlay()
         {
             if (m_AudioSource.isPlaying) yield break;
-            m_AudioSource.clip = m_Normal[0];
+            m_AudioSource.clip = m_Normal[Random.Range(0, m_Normal.Length - 1)];
             m_AudioSource.Play();
         }
     }

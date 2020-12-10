@@ -14,8 +14,6 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-using StudioJamNov2020.World;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -29,9 +27,11 @@ namespace StudioJamNov2020
         public Canvas m_UICanvas = null;
         //public LevelChunkEntry[] m_LevelChunks = null;
         public GameObject m_GameOverText = null;
+        public GameObject m_ScoreText = null;
         /*[SerializeField] int m_MaxChunks = 64;
         List<LevelChunk> m_SpawnedChunks = null;*/
         int m_PauseDelay = 300;
+        public int m_Score = 0;
         bool m_Paused = false;
 
         private void Awake()

@@ -14,12 +14,10 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-using StudioJamNov2020;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    public Item[] m_Loot = null;
     public float m_DecayTime = 2f;
     public float m_FadeTime = 5f;
     [HideInInspector] public bool m_IsActive = false;
