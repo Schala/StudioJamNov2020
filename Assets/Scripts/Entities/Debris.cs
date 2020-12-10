@@ -28,26 +28,10 @@ namespace StudioJamNov2020.Entities
 
 		private void Awake()
 		{
-			// Programmatically add rigidbodies, materials and colliders to each piece to save headaches.
-			AddPhysics();
+			// Programmatically add materials to each piece to save headaches.
 			AddMaterial();
 
 			m_Bodies = GetComponentsInChildren<Rigidbody>();
-		}
-
-		void AddPhysics()
-		{
-			var transforms = GetComponentsInChildren<Transform>();
-			for (int i = 0; i < transforms.Length; i++)
-			{
-				var body = transforms[i].gameObject.AddComponent<Rigidbody>();
-				body.mass = m_PieceMass;
-
-				var collider = transforms[i].gameObject.AddComponent<MeshCollider>();
-				collider.convex = true;
-				collider.cookingOptions = MeshColliderCookingOptions.CookForFasterSimulation | MeshColliderCookingOptions.EnableMeshCleaning |
-					MeshColliderCookingOptions.UseFastMidphase | MeshColliderCookingOptions.WeldColocatedVertices;
-			}
 		}
 
 		void AddMaterial()

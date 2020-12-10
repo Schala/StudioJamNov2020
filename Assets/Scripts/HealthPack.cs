@@ -12,7 +12,7 @@ public class HealthPack : MonoBehaviour
 			if (combatant.CompareTag("Player"))
 			{
 				combatant.TakeDamage(-m_Health); // negative damage = heal
-				AudioSource.PlayClipAtPoint(m_Collect, transform.position, 0.5f);
+				AudioSource.PlayClipAtPoint(m_Collect, transform.position, 1f);
 				Destroy(gameObject);
 			}
 	}
