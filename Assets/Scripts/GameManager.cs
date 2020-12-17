@@ -71,7 +71,7 @@ namespace StudioJamNov2020
             return GetValidChunk(parentChunk);
         }
 
-        void GenerateChunks()
+        void GenerateChunks() // TODO: sphere cast check chunk collision
         {
             Debug.Assert(m_LevelChunks != null);
 
