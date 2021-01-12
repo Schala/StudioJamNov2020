@@ -21,13 +21,31 @@ namespace StudioJamNov2020.Battle
     public class Projectile : MonoBehaviour
     {
 		[HideInInspector] public Weapon m_Parent = null;
+		[HideInInspector] public float m_Lifetime = 0f;
 
 		private void OnTriggerEnter(Collider other)
 		{
 			if (other.TryGetComponent(out Combatant combatant))
 				if (combatant.m_Faction != m_Parent.m_Owner.m_Faction)
 					combatant.TakeDamage(Random.Range(Mathf.Max(m_Parent.m_Damage - 3, 1), m_Parent.m_Damage + 3));
-			Destroy(gameObject);
+			gameObject.SetActive(false);
+		}
+
+		private void Update()
+		{
+			m_Lifetime -= Time.deltaTime;
+
+			if (m_Lifetime <= 0f)
+				gameObject.SetActive(false);
+		}
+
+		private void OnEnable() => GetComponent<Rigidbody>().isKinematic = false;
+
+		private void OnDisable()
+		{
+			GetComponent<Rigidbody>().isKinematic = true;
+			transform.position = Vector3.zero;
+			m_Parent = null;
 		}
 	}
 }

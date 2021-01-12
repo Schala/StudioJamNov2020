@@ -28,6 +28,7 @@ namespace StudioJamNov2020
         //public LevelChunkEntry[] m_LevelChunks = null;
         public GameObject m_GameOverText = null;
         public GameObject m_ScoreText = null;
+        [HideInInspector] public ObjectPool m_Pool = null;
         /*[SerializeField] int m_MaxChunks = 64;
         List<LevelChunk> m_SpawnedChunks = null;*/
         int m_PauseDelay = 300;
@@ -37,6 +38,7 @@ namespace StudioJamNov2020
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
+            m_Pool = FindObjectOfType<ObjectPool>();
 
             /*for (int i = 0; i < m_LevelChunks.Length; i++)
                 Debug.Assert(m_LevelChunks[i].m_MaxProbability != 0f);*/

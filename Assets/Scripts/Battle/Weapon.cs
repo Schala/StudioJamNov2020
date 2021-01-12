@@ -14,6 +14,7 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+using System.Collections;
 using UnityEngine;
 
 namespace StudioJamNov2020.Battle
@@ -40,14 +41,18 @@ namespace StudioJamNov2020.Battle
         public AudioClip[] m_Audio = null;
         [HideInInspector] public Combatant m_Owner = null;
         AudioSource m_AudioSource = null;
+        GameManager m_Game = null;
 
         [Header("Ranged")]
-        [SerializeField] GameObject m_ProjectilePrefab = null;
-        [SerializeField] GameObject m_ProjectileSpawnPoint = null;
+        [SerializeField] Transform m_ProjectileSpawnPoint = null;
         [SerializeField] float m_projectileSpeed = 5000f;
         [SerializeField] float m_projectileLifetime = 3f;
 
-        private void Awake() => m_AudioSource = GetComponent<AudioSource>();
+        private void Awake()
+        {
+            m_AudioSource = GetComponent<AudioSource>();
+            m_Game = FindObjectOfType<GameManager>();
+        }
 
 		private void Start() => gameObject.SetActive(false);
 
@@ -63,13 +68,17 @@ namespace StudioJamNov2020.Battle
             if (m_Audio != null) m_AudioSource.clip = m_Audio[Random.Range(0, m_Audio.Length - 1)];
             m_AudioSource.pitch = Random.Range(0.5f, 1.5f);
             m_AudioSource.Play();
-            var projectile = Instantiate(m_ProjectilePrefab, m_ProjectileSpawnPoint.transform);
-            var projectileBehavior = projectile.GetComponent<Projectile>();
-            projectile.transform.rotation = Quaternion.LookRotation(m_Owner.transform.forward);
-            projectileBehavior.m_Parent = this;
-            projectile.GetComponent<Rigidbody>().AddForce(m_Owner.transform.forward * m_projectileSpeed, ForceMode.Impulse);
-            projectile.transform.parent = null;
-            Destroy(projectile, m_projectileLifetime);
+            var bullet = m_Game.m_Pool.Get("Bullet");
+            if (bullet != null)
+            {
+                bullet.SetActive(true);
+                var behavior = bullet.GetComponent<Projectile>();
+                bullet.transform.position = m_ProjectileSpawnPoint.position;
+                bullet.transform.rotation = Quaternion.LookRotation(m_Owner.transform.forward);
+                behavior.m_Parent = this;
+                behavior.m_Lifetime = m_projectileLifetime;
+                bullet.GetComponent<Rigidbody>().AddForce(m_Owner.transform.forward * m_projectileSpeed, ForceMode.Impulse);
+            }
         }
 	}
 }

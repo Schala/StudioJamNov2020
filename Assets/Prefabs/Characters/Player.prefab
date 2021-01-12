@@ -120,6 +120,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!1 &2178720185079648572
@@ -399,7 +400,7 @@ MonoBehaviour:
   m_Type: 0
   m_Audio: []
   m_Owner: {fileID: 0}
-  m_ProjectilePrefab: {fileID: 0}
+  m_ProjectilePool: {fileID: 0}
   m_ProjectileSpawnPoint: {fileID: 0}
   m_projectileSpeed: 5000
   m_projectileLifetime: 3
@@ -485,7 +486,7 @@ MonoBehaviour:
   m_Type: 0
   m_Audio: []
   m_Owner: {fileID: 0}
-  m_ProjectilePrefab: {fileID: 0}
+  m_ProjectilePool: {fileID: 0}
   m_ProjectileSpawnPoint: {fileID: 0}
   m_projectileSpeed: 5000
   m_projectileLifetime: 3
@@ -968,6 +969,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4972518403543444764, guid: 23eef191fee95eb429633821b1ecdd82, type: 3}
+      propertyPath: m_ProjectileSpawnPoint
+      value: 
+      objectReference: {fileID: 7302364911830063113}
     - target: {fileID: 5739030420532911654, guid: 23eef191fee95eb429633821b1ecdd82, type: 3}
       propertyPath: m_Name
       value: WM_SF_Wp01_a
@@ -989,3 +994,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7606766a3d2536d45b579c880f553d61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &7302364911830063113 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1152835432501054897, guid: 23eef191fee95eb429633821b1ecdd82, type: 3}
+  m_PrefabInstance: {fileID: 7685541770941027768}
+  m_PrefabAsset: {fileID: 0}
