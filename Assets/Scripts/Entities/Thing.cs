@@ -16,7 +16,7 @@
 
 using UnityEngine;
 
-public class Entity : MonoBehaviour
+public class Thing : MonoBehaviour
 {
     public float m_DecayTime = 2f;
     public float m_FadeTime = 5f;

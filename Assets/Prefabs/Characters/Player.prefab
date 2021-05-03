@@ -291,6 +291,7 @@ MonoBehaviour:
   m_TotalArmor: 0
   m_Rate: 0
   m_Range: 0
+  m_HealthBar: {fileID: 7600449593550413022}
 --- !u!114 &7600449593550413022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -400,7 +401,6 @@ MonoBehaviour:
   m_Type: 0
   m_Audio: []
   m_Owner: {fileID: 0}
-  m_ProjectilePool: {fileID: 0}
   m_ProjectileSpawnPoint: {fileID: 0}
   m_projectileSpeed: 5000
   m_projectileLifetime: 3
@@ -486,7 +486,6 @@ MonoBehaviour:
   m_Type: 0
   m_Audio: []
   m_Owner: {fileID: 0}
-  m_ProjectilePool: {fileID: 0}
   m_ProjectileSpawnPoint: {fileID: 0}
   m_projectileSpeed: 5000
   m_projectileLifetime: 3

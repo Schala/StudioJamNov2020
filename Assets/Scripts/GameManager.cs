@@ -14,6 +14,8 @@
  * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+//using Unity.Entities;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -28,12 +30,17 @@ namespace StudioJamNov2020
         //public LevelChunkEntry[] m_LevelChunks = null;
         public GameObject m_GameOverText = null;
         public GameObject m_ScoreText = null;
+        public GameObject m_ControlsText = null;
         [HideInInspector] public ObjectPool m_Pool = null;
         /*[SerializeField] int m_MaxChunks = 64;
         List<LevelChunk> m_SpawnedChunks = null;*/
         int m_PauseDelay = 300;
         public int m_Score = 0;
         bool m_Paused = false;
+        /*Unity.Entities.World m_World;
+        EntityManager m_EntityManager;
+        BlobAssetStore m_BlobAssetStore = null;
+        GameObjectConversionSettings m_ConversionSettings = null;*/
 
         private void Awake()
         {
@@ -42,9 +49,18 @@ namespace StudioJamNov2020
 
             /*for (int i = 0; i < m_LevelChunks.Length; i++)
                 Debug.Assert(m_LevelChunks[i].m_MaxProbability != 0f);*/
+
+            /*m_World = Unity.Entities.World.DefaultGameObjectInjectionWorld;
+            m_EntityManager = m_World.EntityManager;
+            m_BlobAssetStore = new BlobAssetStore();
+            m_ConversionSettings = GameObjectConversionSettings.FromWorld(m_World, m_BlobAssetStore);*/
         }
 
-        //private void Start() => GenerateChunks();
+        private void Start()
+        {
+            StartCoroutine(HideDirections());
+            //GenerateChunks();
+        }
 
 		private void Update()
 		{
@@ -58,7 +74,18 @@ namespace StudioJamNov2020
             }
 		}
 
-        /*int GetValidChunk(int parentChunk)
+        IEnumerator HideDirections()
+        {
+            yield return new WaitForSeconds(5f);
+            m_ControlsText.SetActive(false);
+        }
+
+		/*private void OnDestroy()
+		{
+            m_BlobAssetStore.Dispose();
+		}*/
+
+		/*int GetValidChunk(int parentChunk)
         {
             var rng = Random.Range(0f, 100f);
             int chosenIndex = 0;

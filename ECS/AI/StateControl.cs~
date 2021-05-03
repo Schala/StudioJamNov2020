@@ -1,0 +1,43 @@
+using System;
+using Unity.Entities;
+
+/// <summary>
+/// Controller of an AI finite state machine,
+/// </summary>
+[Serializable]
+public struct StateControl : IComponentData
+{
+	public BlobAssetReference<State> currentState;
+	public BlobAssetReference<State> remainState;
+	public float lookRadius;
+	public float searchDuration;
+	public int nextWaypoint;
+	public float stateTimeElapsed;
+	public bool active;
+
+	/// <summary>
+	/// Transition the current state to a new state
+	/// </summary>
+	/// <param name="newState">State to transition to</param>
+	public void TransitionToState(in BlobAssetReference<State> newState)
+	{
+		if (newState == remainState) return;
+		currentState = newState;
+		stateTimeElapsed = 0f;
+	}
+}
+
+/// <summary>
+/// Base logic of our state control components
+/// </summary>
+public class StateControlSystem : SystemBase
+{
+	protected override void OnUpdate()
+	{
+		Entities.ForEach((Entity entity, ref StateControl control) =>
+		{
+			if (!control.active) return;
+
+		});
+	}
+}

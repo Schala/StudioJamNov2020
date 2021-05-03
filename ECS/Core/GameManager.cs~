@@ -1,0 +1,54 @@
+using Unity.Entities;
+using UnityEngine;
+
+/// <summary>
+/// Manages the game
+/// </summary>
+public class GameManager : MonoBehaviour
+{
+    public static GameManager Instance { get; private set; } = null;
+
+    public AudioClip gameOverBGM = null;
+    public BlobAssetStore blobAssetStore = null;
+
+    [SerializeField] float pauseDelay = 1f;
+
+    EntityManager entityManager;
+    GameObjectConversionSettings conversionSettings = null;
+    World world = null;
+    bool paused = false;
+
+    /// <summary>
+    /// Initialise and set up our game manager singleton
+    /// </summary>
+	private void Awake()
+	{
+        if (Instance != null)
+            Destroy(gameObject);
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        world = World.DefaultGameObjectInjectionWorld;
+        entityManager = world.EntityManager;
+        blobAssetStore = new BlobAssetStore();
+        conversionSettings = GameObjectConversionSettings.FromWorld(world, blobAssetStore);
+	}
+
+	/// <summary>
+	/// Clean up any outstanding data
+	/// </summary>
+	private void OnDestroy() => blobAssetStore.Dispose();
+
+	// Start is called before the first frame update
+	void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}

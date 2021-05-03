@@ -1,0 +1,26 @@
+using Unity.Entities;
+using UnityEngine;
+
+/// <summary>
+/// Authoring component for StateControl
+/// </summary>
+public class StateControlAuthoring : MonoBehaviour, IConvertGameObjectToEntity
+{
+	[SerializeField] float lookRadius = 1f;
+	[SerializeField] float searchDuration = 4f;
+
+	/// <summary>
+	/// Takes our authored values and applies them to the state control
+	/// </summary>
+	/// <param name="entity"></param>
+	/// <param name="dstManager"></param>
+	/// <param name="conversionSystem"></param>
+	public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+	{
+		dstManager.AddComponentData(entity, new StateControl
+		{
+			lookRadius = lookRadius,
+			searchDuration = searchDuration
+		});
+	}
+}

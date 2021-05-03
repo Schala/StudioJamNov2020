@@ -66,14 +66,13 @@ namespace StudioJamNov2020.Battle
         [HideInInspector] public float m_Rate;
         [HideInInspector] public float m_Range;
         Animator m_Animator = null;
-        HealthBar m_HealthBar = null;
+        public HealthBar m_HealthBar = null;
         bool m_OnCoolDown = false;
         bool m_DeathAudioPlayed = false;
 
         private void Awake()
         {
             m_Animator = GetComponent<Animator>();
-            m_HealthBar = GetComponent<HealthBar>();
             if (m_Weapon == null) m_Weapon = m_LeftHand;
             if (m_SecondaryWeapon == null) m_SecondaryWeapon = m_RightHand;
         }

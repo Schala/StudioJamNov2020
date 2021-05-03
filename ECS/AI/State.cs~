@@ -1,0 +1,123 @@
+using Unity.Burst;
+using Unity.Collections;
+using Unity.Entities;
+using UnityEngine;
+
+/// <summary>
+/// AI state
+/// </summary>
+public struct State
+{
+	public Color gizmoColor;
+	public BlobArray<Action> actions;
+	public BlobArray<Transition> transitions;
+
+	/// <summary>
+	/// Runs every frame, executing actions and managing transitions
+	/// </summary>
+	/// <param name="control">StateControl component passed via system</param>
+	public void Update(ref StateControl control)
+	{
+		for (int i = 0; i < actions.Length; i++)
+			actions[i].Value.Invoke(ref control);
+
+		for (int i = 0; i < transitions.Length; i++)
+		{
+			bool outcome = transitions[i].decision.Value.Value.Invoke(ref control);
+			control.TransitionToState(outcome ? transitions[i].trueState : transitions[i].falseState);
+		}
+	}
+
+	/// <summary>
+	/// Creates a State blob asset
+	/// </summary>
+	/// <param name="actions">Actions used by the state</param>
+	/// <param name="transitions">Transitions used by the state</param>
+	/// <param name="allocator">Memory allocator type</param>
+	/// <returns>Reference to the newly created blob asset</returns>
+	public static BlobAssetReference<State> CreateBlob(NativeArray<Action> actions, NativeArray<Transition> transitions, Allocator allocator)
+	{
+		using var blob = new BlobBuilder(Allocator.TempJob);
+
+		ref var state = ref blob.ConstructRoot<State>();
+
+		var actionArray = blob.Allocate(ref state.actions, actions.Length);
+		for (int i = 0; i < actions.Length; i++)
+			actionArray[i] = actions[i];
+
+		var transitionArray = blob.Allocate(ref state.transitions, transitions.Length);
+		for (int i = 0; i < transitions.Length; i++)
+			transitionArray[i] = transitions[i];
+
+		return blob.CreateBlobAssetReference<State>(allocator);
+	}
+}
+
+/// <summary>
+/// Function executed by Action
+/// </summary>
+/// <param name="control">Acting state controller</param>
+public delegate void Act(ref StateControl control);
+
+/// <summary>
+/// Action associated with an AI state
+/// </summary>
+public struct Action
+{
+	public FunctionPointer<Act> Value;
+
+	/// <summary>
+	/// Creates an Action blob asset
+	/// </summary>
+	/// <param name="function">Function to be executed</param>
+	/// <param name="allocator">Memory allocator type</param>
+	/// <returns>Reference to the newly created blob asset</returns>
+	public static BlobAssetReference<Action> CreateBlob(Act function, Allocator allocator)
+	{
+		using var blob = new BlobBuilder(Allocator.TempJob);
+
+		ref var action = ref blob.ConstructRoot<Action>();
+		action.Value = BurstCompiler.CompileFunctionPointer(function);
+		return blob.CreateBlobAssetReference<Action>(allocator);
+	}
+}
+
+/// <summary>
+/// Function executed by Decision
+/// </summary>
+/// <param name="control">State control making the decision</param>
+/// <returns>Boolean value to determine the outcome</returns>
+public delegate bool Decide(ref StateControl control);
+
+/// <summary>
+/// Decision for an AI state that determines whether the state changes or not
+/// </summary>
+public struct Decision
+{
+	public FunctionPointer<Decide> Value;
+
+	/// <summary>
+	/// Creates a Decision blob asset
+	/// </summary>
+	/// <param name="function">Function to be executed</param>
+	/// <param name="allocator">Memory allocator type</param>
+	/// <returns>Reference to the newly created blob asset</returns>
+	public static BlobAssetReference<Decision> CreateBlob(Decide function, Allocator allocator)
+	{
+		using var blob = new BlobBuilder(Allocator.TempJob);
+
+		ref var decision = ref blob.ConstructRoot<Decision>();
+		decision.Value = BurstCompiler.CompileFunctionPointer(function);
+		return blob.CreateBlobAssetReference<Decision>(allocator);
+	}
+}
+
+/// <summary>
+/// Transition for an AI state, given a Decision and outcomes
+/// </summary>
+public struct Transition
+{
+	public BlobAssetReference<Decision> decision;
+	public BlobAssetReference<State> trueState;
+	public BlobAssetReference<State> falseState;
+}

@@ -49,7 +49,10 @@ MonoBehaviour:
   m_GameOverBGM: {fileID: 8300000, guid: 2fabc93f8fd863a408d8682c21efbd61, type: 3}
   m_UICanvas: {fileID: 0}
   m_GameOverText: {fileID: 0}
-  m_HealthText: {fileID: 0}
+  m_ScoreText: {fileID: 0}
+  m_ControlsText: {fileID: 0}
+  m_Pool: {fileID: 0}
+  m_Score: 0
 --- !u!82 &28883660721111094
 AudioSource:
   m_ObjectHideFlags: 0

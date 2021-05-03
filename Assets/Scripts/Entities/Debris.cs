@@ -49,7 +49,7 @@ namespace StudioJamNov2020.Entities
 				m_Bodies[i].AddForce(m_Force, ForceMode.Impulse);
 			}
 
-			var entity = GetComponent<Entity>();
+			var entity = GetComponent<Thing>();
 			entity.m_DecayTime = m_Lifetime;
 			entity.m_IsActive = true;
 		}
